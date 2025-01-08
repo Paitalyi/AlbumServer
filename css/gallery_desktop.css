@@ -36,13 +36,7 @@ li::marker {
 	object-fit: cover;/* 确保图像覆盖整个容器且不失真 */
 	border: none;
 	border-radius: 10px;
-	filter:
-		brightness(1.1) /* 增强亮度，使照片更明亮 */
-		contrast(1.2) /* 增强对比度，突出细节 */
-		saturate(1.4) /* 增加饱和度，让颜色更丰富 */
-		sepia(0.1) /* 加一点复古棕黄，打造糖水效果 */
-		hue-rotate(-10deg) /* 略微调整色相，使颜色偏粉红 */
-		blur(0.5px); /* 增加柔焦，让画面更梦幻 */
+	filter: sepia(0.2) saturate(1.5) hue-rotate(-20deg) brightness(1.1);
 }
 
 .thumb:hover {

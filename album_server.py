@@ -1,0 +1,139 @@
+from flask import Flask, request, send_file, redirect, url_for, send_from_directory, abort
+import os
+from sys import argv
+from random import choice
+from album_utils import *
+
+# Flask 应用初始化
+app = Flask(__name__)
+
+# 默认值
+PORT = 8888
+HOME_DIR = r"D:\图片"
+
+# 尝试获取port和home_dir参数
+custom_port = None
+custom_home_dir = None
+try:
+    custom_port = int(argv[1])
+    custom_home_dir = argv[2]
+except:
+    pass
+port = custom_port or PORT
+home_dir = custom_home_dir or HOME_DIR
+
+# 文件处理器实例
+file_handler = GalleryFileHandler(home_dir)
+# test
+print(f'Show gallery in [{home_dir}].')
+
+def safe_path_check(request_path):
+    """
+    安全检查 确保路径位于home_dir内
+    """
+    # 获取真实路径并与 home_dir 比较
+    if request_path in ['', '/', '\\']:
+        full_path = file_handler.home_dir
+    else:
+        full_path = os.path.abspath(os.path.join(file_handler.home_dir, request_path))
+
+    # 确保 full_path 是 home_dir 下的路径
+    if not full_path.startswith(file_handler.home_dir):
+        abort(403)  # 如果路径不合法，返回403 Forbidden
+    return full_path
+
+@app.route('/')
+def index():
+    return redirect(url_for('view_dir', path=''))
+
+@app.route('/view_dir')
+def view_dir():
+    relative_path = request.args.get('path', '')
+    page = int(request.args.get('page', 1))
+    
+    # 安全检查
+    full_path = safe_path_check(relative_path)
+
+    if os.path.isdir(full_path):
+        subdirectories = file_handler.get_subdirectories(full_path)
+        if subdirectories:
+            html_content = file_handler.generate_index_html(subdirectories, relative_path, page)
+            file_handler.current_dir = full_path  # 为了实现搜索功能
+            # test
+            print(f'current_dir is {file_handler.current_dir}')
+        else:
+            image_files = file_handler.get_image_files(full_path)
+            user_agent = request.headers.get('User-Agent', '')
+            html_content = file_handler.generate_gallery_html(image_files, relative_path, page, user_agent)
+        return html_content
+    else:
+        return "<h1>404 Directory not found.</h1>", 404
+
+@app.route('/view_img')
+def view_img():
+    relative_path = request.args.get('path', '')
+
+    # 安全检查
+    full_path = safe_path_check(relative_path)
+
+    if os.path.isfile(full_path) and is_img(full_path):
+        return send_file(full_path)
+    else:
+        return "<h1>404 Image not found.</h1>", 404
+
+@app.route('/search', methods=['POST'])
+def search():
+    query = request.form.get('query', '')
+    depth = request.form.get('depth', 'shallow')
+
+    search_results = file_handler.search_folders(query, depth)
+    html_content = file_handler.generate_search_html(search_results, query)
+    return html_content
+
+@app.route('/random_subdir')
+def random_subdirectory():
+    # 获取当前目录的子目录
+    relative_path = request.args.get('path', '')
+
+    # 安全检查
+    full_path = safe_path_check(relative_path)
+    # test
+    print(f"当前目录: [{full_path}] 开始获取子目录...")
+
+    if os.path.isdir(full_path):
+        subdirectories = file_handler.get_subdirectories(full_path)
+        # test
+        print(f"成功获取子目录 其长度为: {len(subdirectories)} 开始从中随机选择子目录...")
+        if subdirectories:
+            # 随机选择一个子目录
+            random_dir = choice(subdirectories)
+            # test
+            print(f"随机选中: [{random_dir}]")
+            return redirect(url_for('view_dir', path=random_dir))
+        else:
+            return "<h1>No subdirectories found.</h1>", 404
+    else:
+        return "<h1>Invalid directory path.</h1>", 404
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('./', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
+@app.route('/asset/<path:filename>')
+def serve_asset(filename):
+    return send_from_directory('./asset', filename)
+
+@app.route('/css/<path:filename>')
+def serve_css(filename):
+    return send_from_directory('./css', filename)
+
+@app.route('/js/<path:filename>')
+def serve_js(filename):
+    return send_from_directory('./js', filename)
+
+if __name__ == "__main__":
+    os.chdir(os.path.dirname(__file__))  # 设置工作目录为脚本所在目录
+    app.run(host='0.0.0.0', port=port)
+    # 0.0.0.0 是一个通配地址，表示绑定到所有 IPv4 地址上的网络接口。
+    # 无论是本地的 localhost (127.0.0.1)，还是服务器的公网 IP，都可以通过对应的地址访问这个 Flask 应用。
+    

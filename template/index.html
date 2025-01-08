@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{0}</title>
+<link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+	<div class="header">
+		<form action="/search" method="POST">
+			<input type="text" name="query" value="{1}" placeholder="请输入搜索内容">
+			<label>
+				深度搜索
+				<input type="checkbox" name="depth" value="deep">
+			</label>
+			<button type="submit">搜索</button>
+		</form>
+	
+		<button class="random-button" onclick="window.location.href='/random_subdir?path={2}'">
+			随机
+		</button>
+	</div>
+    
+	
+    <ul>
+        {3}
+    </ul>
+    {4}
+</body>
+</html>

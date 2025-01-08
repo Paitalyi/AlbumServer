@@ -1,4 +1,4 @@
-# 相册展示By Flask
+# AlbumServer
 
 ## Python环境
 

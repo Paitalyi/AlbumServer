@@ -1,3 +1,4 @@
+#!/usr/bin/env
 from flask import Flask, request, send_file, redirect, url_for, send_from_directory, abort
 import os
 from sys import argv

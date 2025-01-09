@@ -36,7 +36,7 @@ li::marker {
 	object-fit: cover;/* 确保图像覆盖整个容器且不失真 */
 	border: none;
 	border-radius: 10px;
-	filter: sepia(0.2) saturate(1.5) hue-rotate(-20deg) brightness(1.1);
+	filter: sepia(0.15) saturate(1.08) hue-rotate(-8deg) brightness(1.06);
 	box-shadow: 0 0 10px 0 rgb(0 0 0 / 50%);
 }
 

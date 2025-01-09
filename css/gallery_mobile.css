@@ -18,7 +18,7 @@ body {
 	-ms-interpolation-mode: bicubic;
 	-webkit-transition: all .7s linear;
 	transition: all .7s;
-	filter: sepia(0.2) saturate(1.5) hue-rotate(-20deg) brightness(1.1);
+	filter: sepia(0.15) saturate(1.08) hue-rotate(-8deg) brightness(1.06);
 	box-shadow: 0 0 10px 0 rgb(0 0 0 / 50%);
 }
 

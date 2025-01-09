@@ -19,6 +19,7 @@ body {
 	-webkit-transition: all .7s linear;
 	transition: all .7s;
 	filter: sepia(0.2) saturate(1.5) hue-rotate(-20deg) brightness(1.1);
+	box-shadow: 0 0 10px 0 rgb(0 0 0 / 50%);
 }
 
 #nav {

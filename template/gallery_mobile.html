@@ -10,16 +10,22 @@
 	</head>
 	<body>
 		<div class="main">
-			<h3 class="title">{title}
-				<span class="images_num">{imgs_num}P</span>
-			</h3>
-			{nav}
+			<div class="header">
+				<h3 class="title">{title}
+					<span class="images_num">{imgs_num}P</span>
+				</h3>
+				{nav}
+			</div>
+			
 			<div class="bigimg">
 				{images}
 			</div>
-			{fix_right}
-			{nav}
-			{pagination}
+			
+			<div class="footer">
+				{fix_right}
+				{nav}
+				{pagination}
+			</div>
 		</div>
 		<script type="text/javascript" src="js/jquery.js"></script>
 		<script type="text/javascript" src="js/common.js"></script>

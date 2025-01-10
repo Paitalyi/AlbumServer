@@ -5,24 +5,31 @@ body {
 
 img {
 	filter: sepia(0.15) saturate(1.08) hue-rotate(-8deg) brightness(1.06);
-	box-shadow: 0 0 10px 0 rgb(0 0 0 / 50%);
 }
 
+.main, .header, .footer {
+	width: 100%;
+}
 
 .title {
 	font-weight: normal;
-	font-size: 1.5rem;
+	font-size: 2.5rem;
 	overflow: hidden;
-	margin: 0 0 2rem;
+	margin: 2rem 2rem;
 	text-align: center;
 }
 
 .images_num {
-	background: #DDD;
-	padding: 5px 10px;
-	font-size: 20px;
-	border-radius: 10px;
-	margin-left: 10px;
+  display: inline-block; /* 使标签适合内容大小 */
+  background-color: #f8f8f8; /* 浅灰色背景 */
+  color: #333; /* 文字颜色 */
+  font-size: 14px; /* 字体大小 */
+  font-weight: bold; /* 字体加粗 */
+  padding: 4px 8px; /* 内边距 */
+  border-radius: 20px; /* 圆角 */
+  border: 1px solid #ddd; /* 边框颜色 */
+  text-align: center; /* 居中对齐 */
+  white-space: nowrap; /* 防止换行 */
 }
 
 #nav {

@@ -1,14 +1,14 @@
-body {
+li::marker {
+	content: none;/* 移除标记符号 */
+}
+
+.main {
     display: flex;
     justify-content: center;  /* 水平居中 */
     align-items: flex-start;  /* 从上方开始对齐 */
     box-sizing: border-box;
 	overflow-x: hidden;
     flex-wrap: wrap;          /* 允许子元素换行 */
-}
-
-li::marker {
-	content: none;/* 移除标记符号 */
 }
 
 .gallery {

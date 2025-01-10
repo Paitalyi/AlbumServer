@@ -8,13 +8,6 @@ img {
 	box-shadow: 0 0 10px 0 rgb(0 0 0 / 50%);
 }
 
-span {
-	background: #DDD;
-	padding: 5px 10px;
-	font-size: 20px;
-	border-radius: 10px;
-	margin-left: 10px;
-}
 
 .title {
 	font-weight: normal;
@@ -22,6 +15,14 @@ span {
 	overflow: hidden;
 	margin: 0 0 2rem;
 	text-align: center;
+}
+
+.images_num {
+	background: #DDD;
+	padding: 5px 10px;
+	font-size: 20px;
+	border-radius: 10px;
+	margin-left: 10px;
 }
 
 #nav {

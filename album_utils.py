@@ -173,7 +173,14 @@ class GalleryFileHandler():
 
         with open(template_file, encoding='UTF-8') as f:
             template = f.read()
-        return template.format(folder_name, images_html, nav_html + pagination_html)
+        with open('template/fix-right.html') as f:
+            fix_right = f.read()
+        return template.format(title = folder_name, 
+                               imgs_num = len(image_paths), 
+                               images = images_html, 
+                               fix_right = fix_right, 
+                               nav = nav_html, 
+                               pagination = pagination_html)
 
     def generate_index_html(self, folders, relative_parent_path, page=1, search_query=""):
         total_folders = len(folders)

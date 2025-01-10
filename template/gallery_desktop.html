@@ -1,44 +1,28 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>{0}</title>
-	<meta name="keywords" content="Gallery" />
-	<meta name="description" content="Gallery" />
-    <link rel="stylesheet" href="css/gallery_desktop.css">
-</head>
-<body>
-    <ul class='gallery'> 
-        {1}
-    </ul>
-	
-	<div class="fixed-right">
-		<ul>
-			<li class="menu-top" style="display: none;">
-				<svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">>
-					<path d="M896 768l-80.896 0-131.072 0-155.648 0-159.744 0-141.312 0-100.352 0q-24.576 0-39.936-11.264t-20.992-28.672-0.512-38.4 22.528-41.472q37.888-40.96 79.872-86.016t86.016-91.136l86.016-92.16q44.032-46.08 83.968-89.088 18.432-19.456 44.032-28.672t52.736-8.704 53.248 11.776 45.568 31.744q70.656 73.728 147.456 159.744t160.768 184.32q19.456 23.552 26.624 46.592t2.56 40.96-20.48 29.184-40.448 11.264z"
-					fill-rule="nonzero"></path>
-				</svg>
-			</li>
-			<li class="menu-index" onclick="openIndex()">
-	            <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">>
-					<path d="M1001.423238 494.592q21.504 20.48 22.528 45.056t-16.384 40.96q-19.456 17.408-45.056 16.384t-40.96-14.336q-5.12-4.096-31.232-28.672t-62.464-58.88-77.824-73.728-78.336-74.24-63.488-60.416-33.792-31.744q-32.768-29.696-64.512-28.672t-62.464 28.672q-10.24 9.216-38.4 35.328t-65.024 60.928-77.824 72.704-75.776 70.656-59.904 55.808-30.208 27.136q-15.36 12.288-40.96 13.312t-44.032-15.36q-20.48-18.432-19.456-44.544t17.408-41.472q6.144-6.144 37.888-35.84t75.776-70.656 94.72-88.064 94.208-88.064 74.752-70.144 36.352-34.304q38.912-37.888 83.968-38.4t76.8 30.208q6.144 5.12 25.6 24.064t47.616 46.08 62.976 60.928 70.656 68.096 70.144 68.096 62.976 60.928 48.128 46.592zM447.439238 346.112q25.6-23.552 61.44-25.088t64.512 25.088q3.072 3.072 18.432 17.408l38.912 35.84q22.528 21.504 50.688 48.128t57.856 53.248q68.608 63.488 153.6 142.336l0 194.56q0 22.528-16.896 39.936t-45.568 18.432l-193.536 0 0-158.72q0-33.792-31.744-33.792l-195.584 0q-17.408 0-24.064 10.24t-6.656 23.552q0 6.144-0.512 31.232t-0.512 53.76l0 73.728-187.392 0q-29.696 0-47.104-13.312t-17.408-37.888l0-203.776q83.968-76.8 152.576-139.264 28.672-26.624 57.344-52.736t52.224-47.616 39.424-36.352 19.968-18.944z"
-					fill-rule="nonzero"></path>
-				</svg>
-			</li>
-			<li class="menu-bottom">
-				<svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">>
-					<path d="M878.592 250.88q29.696 0 48.128 11.264t24.576 29.696 0 41.472-26.624 45.568q-82.944 92.16-159.744 180.224t-148.48 164.864q-19.456 20.48-45.568 31.744t-53.76 11.776-53.248-8.704-43.008-28.672q-39.936-44.032-82.944-90.112l-88.064-92.16q-43.008-46.08-85.504-90.624t-79.36-86.528q-17.408-19.456-22.528-40.448t1.024-38.4 23.552-28.672 45.056-11.264q35.84 0 98.816-0.512t137.728-0.512l153.6 0 150.528 0 125.952 0 79.872 0z"
-					fill-rule="nonzero"></path>
-				</svg>
-			</li>
-		</ul>
-	</div>
-	
-    {2}
-	<script type="text/javascript" src="js/jquery.js"></script>
-	<script type="text/javascript" src="js/lazyload.js"></script>
-	<script type="text/javascript" src="js/desktop.js"></script>
-	<script type="text/javascript" src="js/masonry.js"></script>
-</body>
+	<head>
+		<meta charset="utf-8">
+		<title>{title}</title>
+		<meta name="keywords" content="Gallery" />
+		<meta name="description" content="Gallery" />
+		<link rel="stylesheet" href="css/common.css">
+		<link rel="stylesheet" href="css/gallery_desktop.css">
+	</head>
+	<body>
+		<div class="main">
+			{nav}
+			<h3 class="title">{title}<span>{imgs_num}P</span></h3>
+			<ul class='gallery'>
+				{images}
+			</ul>
+			{fix_right}
+			{nav}
+			{pagination}
+		</div>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/common.js"></script>
+		<script type="text/javascript" src="js/lazyload.js"></script>
+		<script type="text/javascript" src="js/desktop.js"></script>
+		<script type="text/javascript" src="js/masonry.js"></script>
+	</body>
 </html>

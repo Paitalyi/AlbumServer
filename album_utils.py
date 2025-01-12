@@ -2,6 +2,7 @@ import os
 import re
 import socket
 from urllib.parse import quote
+from watchdog.events import FileSystemEventHandler
 
 # 初始化
 ITEMS_PER_PAGE = 50
@@ -24,6 +25,37 @@ def extract_first_number(file_path):
     match = re.search(r'(\d+)', basename)
     return int(match.group(1)) if match else float('inf')
 
+# 监控文件更改
+class DirectoryEventHandler(FileSystemEventHandler):
+    def __init__(self, file_handler):
+        super().__init__()
+        self.file_handler = file_handler
+        self.home_dir = self.file_handler.home_dir  # 不会更新 所以存储下来以便使用
+    def remove_item(self, item):
+        try:
+            self.file_handler.subdirectories4home_dir.remove(os.path.relpath(item, start=self.home_dir))
+            # test
+            print('Remove ', item)
+        except ValueError as e:
+            print(str(e))
+    def add_item(self, item):
+        self.file_handler.subdirectories4home_dir.append(os.path.relpath(item, start=self.home_dir))
+        self.file_handler.subdirectories4home_dir.sort(key=lambda x: list(map(ord, x)))
+        # test
+        print('Add ', item)
+    def on_created(self, event):
+        print(f"Create: [{event.src_path}], type: {'directory' if event.is_directory else 'file'}")
+        if event.is_directory:
+            self.add_item(event.src_path)
+    def on_deleted(self, event):
+        print(f"Delete: [{event.src_path}], type: {'directory' if event.is_directory else 'file'}")
+        # if event.is_directory: # 某些watchdog版本 在删除事件后, event.is_directory会出错
+        self.remove_item(event.src_path)
+    def on_moved(self, event):
+        print(f"Move: [{event.src_path}] -> [{event.dest_path}], type: {'directory' if event.is_directory else 'file'}")
+        if event.is_directory:
+            self.remove_item(event.src_path)
+            self.add_item(event.dest_path)
 
 # 文件工具类
 class GalleryFileHandler():
@@ -45,7 +77,7 @@ class GalleryFileHandler():
         if directory in [self.home_dir, f'{self.home_dir}\\', f'{self.home_dir}/']:
             self.last_folder_directory = directory
             # test
-            print(f'Change last_folder_directory to {self.last_folder_directory}')
+            print(f'Change last_folder_directory to [{self.last_folder_directory}].')
             self.last_subdirectories = self.subdirectories4home_dir
             # test
             print('Use subdirectories4home_dir')
@@ -56,7 +88,7 @@ class GalleryFileHandler():
             if subdirectories:  # subdirectories非空 按照本应用的逻辑 应该进入这些子目录的index页
                 self.last_folder_directory = directory
                 # test
-                print(f'Change last_folder_directory to {self.last_folder_directory}')
+                print(f'Change last_folder_directory to [{self.last_folder_directory}].')
                 self.last_subdirectories = subdirectories
             return subdirectories
         # test
@@ -81,14 +113,14 @@ class GalleryFileHandler():
         results = []
         if depth == "shallow":
             # test
-            print(f"Shallow search in {self.current_dir}")
+            print(f"Shallow search in [{self.current_dir}].")
             # 仅搜索当前目录
             for item in os.listdir(self.current_dir):
                 if query.lower() in item.lower() and os.path.isdir(os.path.join(self.current_dir, item)):
                     results.append(os.path.relpath(os.path.join(self.current_dir, item), start=self.home_dir))
         elif depth == "deep":
             # test
-            print(f"Deep search in {self.current_dir}")
+            print(f"Deep search in [{self.current_dir}].")
             # 深度搜索当前目录及其子目录
             for root, dirs, _ in os.walk(self.current_dir):
                 for folder in dirs:
@@ -97,7 +129,7 @@ class GalleryFileHandler():
         if len(results) > 1:
             self.last_folder_directory = f'<Search>: {query}'  # 伪路径 为了重复利用last_*的机制
             # test
-            print(f'Change last_folder_directory to {self.last_folder_directory}')
+            print(f'Change last_folder_directory to [{self.last_folder_directory}].')
             self.last_subdirectories = results
         return results
     
@@ -125,11 +157,11 @@ class GalleryFileHandler():
 
         # 确保 relative_parent_path 即image的父目录相对home_dir的相对路径在 last_subdirectories 中
         if relative_parent_path not in self.last_subdirectories:
-            print(f"Warning: {relative_parent_path} not found in last_subdirectories.")
-            return f"Error: Folder not found. Len of self.last_subdirectories is {len(self.last_subdirectories)}"
+            print(f"Warning: [{relative_parent_path}] not found in last_subdirectories.")
+            return f"Error: Folder not found. Len of self.last_subdirectories is <{len(self.last_subdirectories)}>"
 
         # test:
-        print(f'Current len of dirs: {len(self.last_subdirectories)}')
+        print(f'Current len of dirs: <{len(self.last_subdirectories)}>')
         
         # 获取当前文件夹在子文件夹列表中的位置
         current_folder_index = self.last_subdirectories.index(relative_parent_path)  # 查找relative_parent_path 即image的父目录，在 last_subdirectories 中的索引

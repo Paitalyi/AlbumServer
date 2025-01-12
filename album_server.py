@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 from flask import Flask, request, send_file, redirect, url_for, send_from_directory, abort
 import os
+import time
 from sys import argv
 from random import choice
+from watchdog.observers import Observer
 from album_utils import *
 
 # Flask 应用初始化
@@ -27,6 +29,16 @@ home_dir = custom_home_dir or HOME_DIR
 file_handler = GalleryFileHandler(home_dir)
 # test
 print(f'Show gallery in [{home_dir}].')
+
+# 事件处理器实例
+event_handler = DirectoryEventHandler(file_handler)
+# 观察者实例
+observer = Observer()
+# 开始监控
+observer.schedule(event_handler, home_dir, recursive=False)
+observer.start()
+print(f'Monitoring directory: [{home_dir}].')
+print('Pls use double Ctrl+C to stop.\n')
 
 def safe_path_check(request_path):
     """
@@ -61,7 +73,7 @@ def view_dir():
             html_content = file_handler.generate_index_html(subdirectories, relative_path, page)
             file_handler.current_dir = full_path  # 为了实现搜索功能
             # test
-            print(f'current_dir is {file_handler.current_dir}')
+            print(f'current_dir is [{file_handler.current_dir}].')
         else:
             image_files = file_handler.get_image_files(full_path)
             user_agent = request.headers.get('User-Agent', '')
@@ -104,7 +116,7 @@ def random_subdirectory():
     if os.path.isdir(full_path):
         subdirectories = file_handler.get_subdirectories(full_path)
         # test
-        print(f"成功获取子目录 其长度为: {len(subdirectories)} 开始从中随机选择子目录...")
+        print(f"成功获取子目录 其长度为: <{len(subdirectories)}> 开始从中随机选择子目录...")
         if subdirectories:
             # 随机选择一个子目录
             random_dir = choice(subdirectories)
@@ -137,4 +149,12 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0', port=port)
     # 0.0.0.0 是一个通配地址，表示绑定到所有 IPv4 地址上的网络接口。
     # 无论是本地的 localhost (127.0.0.1)，还是服务器的公网 IP，都可以通过对应的地址访问这个 Flask 应用。
-    
+
+    # 平滑退出observer
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+        print("\nStop monitoring.")
+    observer.join()

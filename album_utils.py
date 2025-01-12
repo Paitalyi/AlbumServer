@@ -127,7 +127,7 @@ class GalleryFileHandler():
                     if query.lower() in folder.lower():
                         results.append(os.path.relpath(os.path.join(root, folder), start=self.home_dir))
         if len(results) > 1:
-            self.last_folder_directory = f'<Search>: {query}'  # 伪路径 为了重复利用last_*的机制
+            self.last_folder_directory = f'(Search): {query}'  # 伪路径 为了重复利用last_*的机制
             # test
             print(f'Change last_folder_directory to [{self.last_folder_directory}].')
             self.last_subdirectories = results
@@ -160,6 +160,8 @@ class GalleryFileHandler():
             print(f"Warning: [{relative_parent_path}] not found in last_subdirectories.")
             with open('template/not_found.html') as f:
                 template = f.read()
+            # debug
+            print(template.format(cache_dir=self.last_folder_directory, num=len(self.last_subdirectories)))
             return template.format(cache_dir=self.last_folder_directory, num=len(self.last_subdirectories))
 
         # test:

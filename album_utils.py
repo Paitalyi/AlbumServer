@@ -158,7 +158,7 @@ class GalleryFileHandler():
         # 确保 relative_parent_path 即image的父目录相对home_dir的相对路径在 last_subdirectories 中
         if relative_parent_path not in self.last_subdirectories:
             print(f"Warning: [{relative_parent_path}] not found in last_subdirectories.")
-            return f"Error: Folder not found. Len of self.last_subdirectories is <{len(self.last_subdirectories)}>"
+            return f"Error: Folder not found.\nCurrent folder is {self.last_folder_directory}\nNum of its subdirectories is {len(self.last_subdirectories)}."
 
         # test:
         print(f'Current len of dirs: <{len(self.last_subdirectories)}>')

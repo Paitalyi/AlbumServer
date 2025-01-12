@@ -2,6 +2,21 @@ function openIndex() {
 	location.href = "/";
 }
 
+function updateReadingProgress() {
+    // 获取页面的总高度和当前滚动位置
+    const documentHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrollPosition = window.scrollY;
+
+    // 计算阅读进度，百分比形式
+    const progress = (scrollPosition / documentHeight) * 100;
+
+    // 更新进度条的宽度
+    document.getElementById('reading_progress').style.width = progress + '%';
+}
+
+// 监听滚动事件
+window.addEventListener('scroll', updateReadingProgress);
+
 // 滚动到顶部
 $('.menu-top').click(function() {
 	$('body, html').animate({

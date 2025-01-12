@@ -11,6 +11,17 @@ img {
 	width: 100%;
 }
 
+#reading_progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 6px;
+    background-color: #007bff;
+    z-index: 9999;
+    transition: width 0.1s ease-out; /* 为了平滑显示进度条 */
+}
+
 .title {
 	font-weight: normal;
 	font-size: 2.5rem;

@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{0}</title>
+<title>{title}</title>
 <link rel="stylesheet" href="css/search.css">
 </head>
 <body>
     <form action="/search" method="POST">
-        <input type="text" name="query" value="{1}" placeholder="请输入搜索内容">
+        <input type="text" name="query" value="{query}" placeholder="请输入搜索内容">
 		<label>
 			深度搜索
 			<input type="checkbox" name="depth" value="deep">
@@ -16,7 +16,7 @@
         <button type="submit">搜索</button>
     </form>
     <ul>
-        {2}
+        {results}
     </ul>
 </body>
 </html>

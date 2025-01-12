@@ -144,14 +144,14 @@ class GalleryFileHandler():
             prev_path = quote(prev_folder)
             with open('template/nav-previous.html') as f:
                 template = f.read()
-            nav_html += template.format(prev_path, os.path.basename(prev_folder))
+            nav_html += template.format(path=prev_path, name=os.path.basename(prev_folder))
         # 填充一行
         nav_html += "</br>"
         if next_folder:
             next_path = quote(next_folder)
             with open('template/nav-next.html') as f:
                 template = f.read()
-            nav_html += template.format(next_path, os.path.basename(next_folder))
+            nav_html += template.format(path=next_path, name=os.path.basename(next_folder))
         nav_html += "</nav>"
 
         # 添加分页 HTML
@@ -206,7 +206,11 @@ class GalleryFileHandler():
             template = f.read()
         if relative_parent_path == '':
             relative_parent_path = '/'
-        return template.format(f"当前目录: {relative_parent_path}", search_query, relative_parent_path, folders_html, pagination_html)
+        return template.format(title=f"当前目录: {relative_parent_path}", 
+                                query=search_query, 
+                                path=relative_parent_path, 
+                                folders=folders_html, 
+                                pagination=pagination_html)
 
     def generate_search_html(self, search_results, search_query):
         search_results_html = "\n".join([
@@ -215,4 +219,6 @@ class GalleryFileHandler():
         ])
         with open('template/search.html', encoding='UTF-8') as f:
             template = f.read()
-        return template.format(f"搜索结果: {search_query}", search_query, search_results_html)
+        return template.format(title=f"搜索结果: {search_query}", 
+                                query=search_query, 
+                                results=search_results_html)

@@ -160,9 +160,8 @@ class GalleryFileHandler():
             print(f"Warning: [{relative_parent_path}] not found in last_subdirectories.")
             with open('template/not_found.html') as f:
                 template = f.read()
-            # debug
-            print(template.format(cache_dir=self.last_folder_directory, num=len(self.last_subdirectories)))
-            return template.format(cache_dir=self.last_folder_directory, num=len(self.last_subdirectories))
+            cache_dir = os.path.relpath(self.last_folder_directory, start=self.home_dir)
+            return template.format(cache_dir=cache_dir, num=len(self.last_subdirectories))
 
         # test:
         print(f'Current len of dirs: <{len(self.last_subdirectories)}>')

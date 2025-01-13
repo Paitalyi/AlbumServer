@@ -5,7 +5,7 @@ from urllib.parse import quote
 from watchdog.events import FileSystemEventHandler
 
 # 初始化
-ITEMS_PER_PAGE = 50
+ITEMS_PER_PAGE = 100
 IMGS_PER_PAGE = 24
 image_suffixes = ['.jpg', '.jpeg', '.webp', '.png', '.avif']
 

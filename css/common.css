@@ -23,8 +23,9 @@ img {
 }
 
 .title {
-	font-weight: normal;
-	font-size: 2.5rem;
+	font-weight: 700;
+    text-transform: capitalize;
+    font-size: 2rem;
 	overflow: hidden;
 	margin: 2rem 2rem;
 	text-align: center;
@@ -47,17 +48,13 @@ img {
     display: flex;
     flex-direction: column; /* 垂直排列 */
     padding: 16px 24px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 20px 0;
+    margin: 0;
 }
 
 .nav-previous,
 .nav-next {
     display: flex;
     align-items: center;
-    font-size: 1rem;
     width: 100%; /* 占满一行 */
 }
 
@@ -70,10 +67,10 @@ img {
 
 .nav-previous svg,
 .nav-next svg {
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     fill: #007bff;
-    margin-right: 8px;
+    margin-right: 5px;
     transition: transform 0.3s ease;
 }
 
@@ -86,7 +83,7 @@ img {
 
 .nav-previous .prev a,
 .nav-next .next a {
-	font-size: 24px;
+	font-size: 16px;
     text-decoration: none;
     color: #007bff;
     font-weight: bold;
@@ -101,7 +98,7 @@ img {
 .pagination {
 	list-style: none;
 	/* 移除默认的列表样式 */
-	padding: 5rem 0;
+	padding: 2.5rem 0;
 	/* 移除默认的内边距 */
 	margin: 0 auto;
 	/* 移除默认的外边距并水平居中 */
@@ -113,53 +110,28 @@ img {
 	/* 水平居中 */
 	align-items: center;
 	/* 垂直居中（对于单行时更美观）但在此场景下可能不是必需的，因为按钮高度固定 */
-	gap: 1rem;
+	gap: 0;
 	/* 按钮之间的间距 */
 }
 
 .pagination a {
-	display: block;
-	/* 将链接转换为块级元素 */
-	width: 7.5rem;
-	/* 宽度 */
-	height: 5rem;
-	/* 高度 */
-	line-height: 5rem;
-	/* 行高与高度相同，以确保文字垂直居中 */
-	padding: 0;
-	/* 移除内边距，因为我们已经设置了固定的高度和行高 */
-	font-size: 3rem;
-	/* 文字大小 */
-	color: #333;
-	/* 文字颜色 */
+	font-size: 15px;
+	font-weight: bold;
+	padding: 5px 10px;
+	margin: 8px;
+	color: #1967d2;
 	text-decoration: none;
-	/* 移除下划线 */
-	background-color: #f0f0f0;
-	/* 背景颜色 */
-	border-radius: 0.25rem;
-	/* 圆角 */
-	text-align: center;
-	/* 文字居中 */
-	transition: background-color 0.3s ease, color 0.3s ease;
-	/* 平滑的过渡效果 */
-	box-sizing: border-box;
-	/* 包括边框和内边距在内计算元素的总宽度和高度 */
 }
 
 /* 鼠标悬停时的样式 */
 .pagination a:hover {
-	background-color: #ddd;
-	/* 背景颜色变深 */
-	color: #000;
-	/* 文字颜色变深 */
+	color: #e34449;
 }
 
 /* 当前页的样式 */
 .pagination a.current {
-	background-color: #007bff;
-	/* 背景颜色变为蓝色 */
-	color: #fff;
-	/* 文字颜色变为白色 */
+	border: 2px #337ab7 solid;
+	border-radius: 30px;
 	cursor: default;
 	/* 禁用点击手型光标 */
 	pointer-events: none;
@@ -214,17 +186,5 @@ img {
 	vertical-align: middle;
 	fill: currentColor;
 	overflow: hidden;
-	font-size: 4.5rem;
-}
-
-@media (max-width: 767px) {
-	#nav {
-		flex-direction: column;
-		align-items: flex-start;
-	}
-
-	.nav-previous,
-	.nav-next {
-		margin: 8px 0;
-	}
+	font-size: 3rem;
 }

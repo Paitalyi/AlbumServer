@@ -165,7 +165,7 @@ class GalleryFileHandler():
 
         # test:
         print(f'Current len of dirs: <{len(self.last_subdirectories)}>')
-        
+
         # 获取当前文件夹在子文件夹列表中的位置
         current_folder_index = self.last_subdirectories.index(relative_parent_path)  # 查找relative_parent_path 即image的父目录，在 last_subdirectories 中的索引
 
@@ -192,7 +192,7 @@ class GalleryFileHandler():
         # 添加分页 HTML
         pagination_html = "<div class='pagination'>"
         if page > 1:
-            pagination_html += f"<a class='prev' href='/view_dir?path={quote(relative_parent_path)}&page={page - 1}'>Last</a> "
+            pagination_html += f"<a class='prev' href='/view_dir?path={quote(relative_parent_path)}&page={page - 1}'>« </a> "
         if total_pages > 1:
             for i in range(1, total_pages + 1):
                 if i == page:
@@ -200,7 +200,7 @@ class GalleryFileHandler():
                 else:
                     pagination_html += f"<a href='/view_dir?path={quote(relative_parent_path)}&page={i}'>{i}</a> "
         if page < total_pages:
-            pagination_html += f"<a class='next' href='/view_dir?path={quote(relative_parent_path)}&page={page + 1}'>Next</a>"
+            pagination_html += f"<a class='next' href='/view_dir?path={quote(relative_parent_path)}&page={page + 1}'> »</a>"
         pagination_html += "</div>"
 
         # 根据设备类型选择模板

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from flask import Flask, request, send_file, redirect, url_for, send_from_directory, abort
+from flask import Flask, request, send_file, redirect, url_for, send_from_directory, abort, jsonify
 import os
 import time
 from sys import argv
@@ -98,6 +98,10 @@ def view_img():
 def search():
     query = request.form.get('query', '')
     depth = request.form.get('depth', 'shallow')
+
+    # 检查 query 是否为空
+    if not query:
+        return jsonify({"error": "Search query cannot be empty."}), 400
 
     search_results = file_handler.search_folders(query, depth)
     html_content = file_handler.generate_search_html(search_results, query)

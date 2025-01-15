@@ -111,8 +111,7 @@ def search():
 def random_subdirectory():
     # 获取当前目录的子目录
     relative_path = request.args.get('path', '')
-    # debug
-    print(relative_path)
+
     # 安全检查
     full_path = safe_path_check(relative_path)
     # test

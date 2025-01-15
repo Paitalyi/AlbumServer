@@ -243,7 +243,7 @@ class GalleryFileHandler():
             relative_parent_path = '/'
         return template.format(title=f"当前目录: {relative_parent_path}", 
                                 query=search_query, 
-                                path=relative_parent_path, 
+                                path=quote(relative_parent_path), 
                                 folders=folders_html, 
                                 pagination=pagination_html)
 

@@ -72,6 +72,10 @@ a:visited {
   color: purple !important; /* 强制应用 */
 }
 
+p {
+  color: #000;
+}
+
 .header {
   display: flex;
   justify-content: center; /* 水平居中 */
@@ -101,7 +105,7 @@ a:visited {
 	top: 50px;
 	right: 50px;
 	width: 150px;
-	height: 150px;
+	height: 100px;
 	padding: 20px;
 	background-color: #fff;
 	box-shadow: -3px 0 10px rgba(0, 0, 0, 0.1);
@@ -114,7 +118,6 @@ a:visited {
 .nav-drop-body {
 	display: flex;
 	flex-direction: column;
-	margin-top: 20px;
 }
 .nav-drop-item {
 	padding: 8px 16px;
@@ -123,6 +126,9 @@ a:visited {
 	color: #3f88e3;
 	transition: all .3s;
 	cursor: pointer;
+	text-decoration: none;
+}
+a.nav-drop-item:hover {
 	text-decoration: none;
 }
 .media{

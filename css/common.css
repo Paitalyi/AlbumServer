@@ -1,7 +1,0 @@
-body {
-    cursor: url(/asset/cursor_blue.png),default
-}
-
-a:hover {
-    cursor: url(/asset/cursor_pink.png),pointer
-}

@@ -146,19 +146,19 @@ class GalleryFileHandler():
         # 根据设备类型选择 img 标签
         if is_mobile_flag:
             images_html = "\n".join([
-                f"<div class='item'><img class='lazy' src='/asset/placeholder.svg' data-original='/view_img?path={quote(image_path)}' alt='{folder_name}'></div>"
+                f"<div class='item'><img class='lazy' src='/static/asset/placeholder.svg' data-original='/view_img?path={quote(image_path)}' alt='{folder_name}'></div>"
                 for image_path in images_to_display
             ])
         else:
             images_html = "\n".join([
-                f"<li class='thumb'> <img class='lazy' src='/asset/placeholder.svg' data-original='/view_img?path={quote(image_path)}' alt='{folder_name}'> </li>"
+                f"<li class='thumb'> <img class='lazy' src='/static/asset/placeholder.svg' data-original='/view_img?path={quote(image_path)}' alt='{folder_name}'> </li>"
                 for image_path in images_to_display
             ])
 
         # 确保 relative_parent_path 即image的父目录相对home_dir的相对路径在 last_subdirectories 中
         if relative_parent_path not in self.last_subdirectories:
             print(f"Warning: [{relative_parent_path}] not found in last_subdirectories.")
-            with open('template/not_found.html') as f:
+            with open('templates/not_found.html') as f:
                 template = f.read()
             cache_dir = os.path.relpath(self.last_folder_directory, start=self.home_dir)
             return template.format(cache_dir=cache_dir, num=len(self.last_subdirectories))
@@ -177,14 +177,14 @@ class GalleryFileHandler():
         nav_html = "<nav id='nav'>"
         if prev_folder:
             prev_path = quote(prev_folder)
-            with open('template/nav-previous.html') as f:
+            with open('templates/nav-previous.html') as f:
                 template = f.read()
             nav_html += template.format(path=prev_path, name=os.path.basename(prev_folder))
         # 填充一行
         nav_html += "</br>"
         if next_folder:
             next_path = quote(next_folder)
-            with open('template/nav-next.html') as f:
+            with open('templates/nav-next.html') as f:
                 template = f.read()
             nav_html += template.format(path=next_path, name=os.path.basename(next_folder))
         nav_html += "</nav>"
@@ -204,11 +204,11 @@ class GalleryFileHandler():
         pagination_html += "</div>"
 
         # 根据设备类型选择模板
-        template_file = "template/gallery_mobile.html" if is_mobile_flag else "template/gallery_desktop.html"
+        template_file = "templates/gallery_mobile.html" if is_mobile_flag else "templates/gallery_desktop.html"
 
         with open(template_file, encoding='UTF-8') as f:
             template = f.read()
-        with open('template/fix-right.html') as f:
+        with open('templates/fix-right.html') as f:
             fix_right = f.read()
         return template.format(title = folder_name, 
                                imgs_num = len(image_paths), 
@@ -237,7 +237,7 @@ class GalleryFileHandler():
                 else:
                     pagination_html += f"<a href='/view_dir?path={quote(relative_parent_path)}&page={i}'>{i}</a> "
             pagination_html += "</div>"
-        with open('template/index.html', encoding='UTF-8') as f:
+        with open('templates/index.html', encoding='UTF-8') as f:
             template = f.read()
         if relative_parent_path == '':
             relative_parent_path = '/'
@@ -252,7 +252,7 @@ class GalleryFileHandler():
             f"<li><a href='/view_dir?path={quote(folder)}'>{os.path.basename(folder)}</a></li>"
             for folder in search_results
         ])
-        with open('template/search.html', encoding='UTF-8') as f:
+        with open('templates/search.html', encoding='UTF-8') as f:
             template = f.read()
         return template.format(title=f"搜索结果: {search_query}", 
                                 query=search_query, 

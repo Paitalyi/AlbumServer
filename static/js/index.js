@@ -5,3 +5,7 @@ window.addEventListener("pageshow", function(event) {
 		// 经测试 某些设备 浏览器仍会失败
 	}
 });
+
+document.querySelector('.sidebar-trigger').addEventListener('click', function() {
+	document.querySelector('.nav-drop').classList.toggle('active');
+});

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from flask import Flask, request, send_file, redirect, url_for, send_from_directory, abort, jsonify
+from flask import Flask, request, render_template, send_file, redirect, url_for, session, send_from_directory, abort, jsonify, flash
 import os
 import time
 from sys import argv
@@ -9,6 +9,8 @@ from album_utils import *
 
 # Flask 应用初始化
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.urandom(24)  # 用于保护会话信息
+app.config.from_pyfile('config.py')
 
 # 默认值
 PORT = 8888
@@ -55,9 +57,40 @@ def safe_path_check(request_path):
         abort(403)  # 如果路径不合法，返回403 Forbidden
     return full_path
 
+@app.before_request
+def check_login():
+    # 如果用户没有登录且正在访问的不是登录页或登录成功后需要跳转的页面
+    if 'user' not in session and request.endpoint not in ['login', 'static', 'favicon']:
+        return redirect(url_for('login'))
+
 @app.route('/')
 def index():
     return redirect(url_for('view_dir', path=''))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # 获取配置文件中的管理员账号和密码
+        admin_username = app.config['ADMIN_USERNAME']
+        admin_password = app.config['ADMIN_PASSWORD']
+
+        if username == admin_username and password == admin_password:
+            session['user'] = username
+            flash('登陆成功', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('用户名或密码错误', 'danger')
+
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    flash('登出成功', 'info')
+    return redirect(url_for('index'))
 
 @app.route('/view_dir')
 def view_dir():
@@ -136,17 +169,6 @@ def random_subdirectory():
 def favicon():
     return send_from_directory('./', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-@app.route('/asset/<path:filename>')
-def serve_asset(filename):
-    return send_from_directory('./asset', filename)
-
-@app.route('/css/<path:filename>')
-def serve_css(filename):
-    return send_from_directory('./css', filename)
-
-@app.route('/js/<path:filename>')
-def serve_js(filename):
-    return send_from_directory('./js', filename)
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(__file__))  # 设置工作目录为脚本所在目录

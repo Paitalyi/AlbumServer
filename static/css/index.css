@@ -38,27 +38,11 @@ form button:hover {
     background-color: #0056b3;
 }
 
-.header {
-  display: flex;
-  justify-content: center; /* 水平居中 */
-  /* align-items: center;  垂直居中  */
-}
-
-.random-button {
-	background-color: #BF7AFF;
-	margin: 15px 0;
-}
-.random-button:hover {
-	background-color: #8400FF;
-}
-
 /* 列表样式 */
 ul {
     list-style-type: none;
     padding: 0;
-	/* padding-left: 20rem; */
     text-align: center;
-	/* text-align: left; */
 }
 
 ul li {
@@ -86,6 +70,78 @@ a:active {
 /* 访问过的链接 */
 a:visited {
   color: purple !important; /* 强制应用 */
+}
+
+.header {
+  display: flex;
+  justify-content: center; /* 水平居中 */
+}
+.dropdown {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	cursor: pointer;
+	position: relative;
+	color: #393a4f;
+	flex-grow: 0;
+	flex-shrink: 0;
+	line-height: 1.5;
+	padding: .5rem .75rem;
+}
+.sidebar-trigger {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 999;
+	cursor: pointer;
+}
+.nav-drop {
+	display: none;
+	position: fixed;
+	top: 50px;
+	right: 50px;
+	width: 150px;
+	height: 150px;
+	padding: 20px;
+	background-color: #fff;
+	box-shadow: -3px 0 10px rgba(0, 0, 0, 0.1);
+	border-radius: 2rem;
+	z-index: 998;
+}
+.nav-drop.active {
+	display: block;
+}
+.nav-drop-body {
+	display: flex;
+	flex-direction: column;
+	margin-top: 20px;
+}
+.nav-drop-item {
+	padding: 8px 16px;
+	display: block;
+	line-height: 0.3;
+	color: #3f88e3;
+	transition: all .3s;
+	cursor: pointer;
+	text-decoration: none;
+}
+.media{
+	align-items: center;
+	display: flex;
+	text-align: inherit;
+}
+.icon-wrap {
+    height: 35px;
+    width: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 1rem;
+}
+.media-content {
+    flex-basis: auto;
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 
 /* 分页样式 */

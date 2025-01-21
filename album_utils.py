@@ -1,6 +1,7 @@
 import os
 import re
 import socket
+from threading import Timer
 from urllib.parse import quote
 from watchdog.events import FileSystemEventHandler
 
@@ -25,12 +26,29 @@ def extract_first_number(file_path):
     match = re.search(r'(\d+)', basename)
     return int(match.group(1)) if match else float('inf')
 
+# 节流Throttling: 限制函数执行频率的技术
+class Throttler:
+    def __init__(self, interval, func):
+        self.interval = interval
+        self.func = func
+        self.timer = None
+
+    def call(self, *args, **kwargs):
+        # 如果存在活动的定时器，则取消它
+        if self.timer is not None:
+            self.timer.cancel()
+        
+        # 创建一个新的定时器，时间间隔走完后执行函数
+        self.timer = Timer(self.interval, self.func, args=args, kwargs=kwargs)
+        self.timer.start()
+
 # 监控文件更改
 class DirectoryEventHandler(FileSystemEventHandler):
-    def __init__(self, file_handler):
+    def __init__(self, file_handler, throttler):
         super().__init__()
         self.file_handler = file_handler
         self.home_dir = self.file_handler.home_dir  # 不会更新 所以存储下来以便使用
+        self.throttler = throttler
     def remove_item(self, item):
         try:
             self.file_handler.subdirectories4home_dir.remove(os.path.relpath(item, start=self.home_dir))
@@ -40,9 +58,10 @@ class DirectoryEventHandler(FileSystemEventHandler):
             print(str(e))
     def add_item(self, item):
         self.file_handler.subdirectories4home_dir.append(os.path.relpath(item, start=self.home_dir))
-        self.file_handler.subdirectories4home_dir.sort(key=lambda x: list(map(ord, x)))
+        self.throttler.call(self.file_handler)  # 使用节流器进行home_dir的subdir的排序
         # test
         print('Add ', item)
+        print('Call throttler')
     def on_created(self, event):
         print(f"Create: [{event.src_path}], type: {'directory' if event.is_directory else 'file'}")
         if event.is_directory:

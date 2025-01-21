@@ -32,8 +32,15 @@ file_handler = GalleryFileHandler(home_dir)
 # test
 print(f'Show gallery in [{home_dir}].')
 
+# 节流器
+def sort_subdir4home_dir(file_handler):
+    file_handler.subdirectories4home_dir.sort(key=lambda x: list(map(ord, x)))
+    # test
+    print('Call throttled func')
+throttler = Throttler(interval=2, func=sort_subdir4home_dir)  # 节流器 间隔2s
+
 # 事件处理器实例
-event_handler = DirectoryEventHandler(file_handler)
+event_handler = DirectoryEventHandler(file_handler, throttler)
 # 观察者实例
 observer = Observer()
 # 开始监控

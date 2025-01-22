@@ -8,7 +8,7 @@ from watchdog.events import FileSystemEventHandler
 # 初始化
 ITEMS_PER_PAGE = 100
 IMGS_PER_PAGE = 24
-image_suffixes = ['.jpg', '.jpeg', '.webp', '.png', '.avif']
+image_suffixes = ['.jpg', '.jpeg', '.webp', '.png', '.avif', '.gif']
 
 # 工具函数
 def is_img(img_path):

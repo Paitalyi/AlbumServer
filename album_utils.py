@@ -170,7 +170,7 @@ class GalleryFileHandler():
             ])
         else:
             images_html = "\n".join([
-                f"<li class='thumb'> <img class='lazy' src='/static/asset/placeholder.svg' data-original='/view_img?path={quote(image_path)}' alt='{folder_name}'> </li>"
+                f"<li class='thumb'><a class='rel-link' href='/view_img?path={quote(image_path)}'><img class='lazy' src='/static/asset/placeholder.svg' data-original='/view_img?path={quote(image_path)}' alt='{folder_name}'></a></li>"
                 for image_path in images_to_display
             ])
 

@@ -1,7 +1,7 @@
 body {
-    cursor: url(/static/asset/cursor_blue.png),default
+	cursor: url(/static/asset/cursor_blue.png), default
 }
 
 a:hover {
-    cursor: url(/static/asset/cursor_pink.png),pointer
+	cursor: url(/static/asset/cursor_pink.png), pointer
 }

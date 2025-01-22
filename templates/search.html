@@ -3,13 +3,13 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>{title}</title>
+		<title>{{ title }}</title>
 		<link rel="stylesheet" href="/static/css/common.css">
 		<link rel="stylesheet" href="/static/css/search.css">
 	</head>
 	<body>
 		<form action="/search" method="POST">
-			<input type="text" name="query" value="{query}" placeholder="请输入搜索内容">
+			<input type="text" name="query" value="{{ query }}" placeholder="请输入搜索内容">
 			<label>
 				深度搜索
 				<input type="checkbox" name="depth" value="deep">
@@ -17,7 +17,11 @@
 			<button type="submit">搜索</button>
 		</form>
 		<ul>
-			{results}
+			{% for folder in results %}
+			<li>
+				<a href="/view_dir?path={{ folder | urlencode }}">{{ folder | basename }}</a>
+			</li>
+			{% endfor %}
 		</ul>
 	</body>
 </html>

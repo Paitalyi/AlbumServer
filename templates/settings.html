@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/static/css/common.css">
+	<link rel="stylesheet" href="/static/css/settings.css">
+	<title>设置</title>
+</head>
+<body>
+	<div class="container">
+		<h1>设置</h1>
+		<div class="form-group">
+			<h2>全局图片 显示设置</h2>
+			<label for="lazyThreshold">图片懒加载中的提前加载距离 (px):</label>
+			<input type="number" id="lazyThreshold" placeholder="输入提前加载距离">
+		</div>
+		<hr>
+		<div class="form-group">
+			<h2>全局图片 CSS滤镜 参数设置</h2>
+			<label for="brightness">图片亮度(0全黑,1无影响,大于1使得图片更明亮)</label>
+			<input type="number" id="brightness" placeholder="输入图片亮度">
+			<label for="contrast">图片对比度(0使得图片变灰,1无影响,大于1将增强对比度)</label>
+			<input type="number" id="contrast" placeholder="输入图片对比度">
+			<label for="saturate">图片饱和度(0完全不饱和,1无影响,大于1则增加饱和度)</label>
+			<input type="number" id="saturate" placeholder="输入图片饱和度">
+			<label for="hueRotate">对图片应用色相旋转(0无影响,单位为deg):</label>
+			<input type="number" id="hueRotate" placeholder="请输入图片色相旋转角度">
+			<label for="sepia">将图像转换为深褐色(0无影响,1则完全是深褐色的)</label>
+			<input type="number" id="sepia" placeholder="输入深褐色(sepia)值">
+		</div>
+		<hr>
+		<div class="form-group">
+			<h2>桌面端图片 显示设置</h2>
+			<label for="thumbWidth">桌面端图片宽度 (px):</label>
+			<input type="number" id="thumbWidth" placeholder="输入桌面端图片宽度">
+			<label for="imgRadius">桌面端图片圆角 (px):</label>
+			<input type="number" id="imgRadius" placeholder="输入桌面端图片圆角">
+			<label for="gridGutter">图片瀑布流中,各列图片之间的间距 (px):</label>
+			<input type="number" id="gridGutter" placeholder="输入各列之间的间距">
+			<label for="refreshTimeout">节流实现中,定时器设置的时间长度 (ms):</label>
+			<input type="number" id="refreshTimeout" placeholder="输入定时器时间长度">
+		</div>
+		<div class="action">
+			<button id="saveButton">保存</button>
+			<button id="resetButton">重置</button>
+		</div>
+	</div>
+	<script src="/static/js/config.js"></script>
+	<script src="/static/js/settings.js"></script>
+</body>
+</html>

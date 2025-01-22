@@ -15,6 +15,8 @@ app.config.from_pyfile('config.py')
 # 默认值
 PORT = 8888
 HOME_DIR = r"D:\图片"
+ITEMS_PER_PAGE = 100
+IMGS_PER_PAGE = 24
 
 # 尝试获取port和home_dir参数
 custom_port = None
@@ -29,14 +31,11 @@ home_dir = custom_home_dir or HOME_DIR
 
 # 文件处理器实例
 file_handler = GalleryFileHandler(home_dir)
-# test
-print(f'Show gallery in [{home_dir}].')
+print(Fore.GREEN + f'Show gallery in [{home_dir}].')
 
 # 节流器
 def sort_subdir4home_dir(file_handler):
     file_handler.subdirectories4home_dir.sort(key=lambda x: list(map(ord, x)))
-    # test
-    print('Call throttled func')
 throttler = Throttler(interval=2, func=sort_subdir4home_dir)  # 节流器 间隔2s
 
 # 事件处理器实例
@@ -46,8 +45,8 @@ observer = Observer()
 # 开始监控
 observer.schedule(event_handler, home_dir, recursive=False)
 observer.start()
-print(f'Monitoring directory: [{home_dir}].')
-print('Pls use double Ctrl+C to stop.\n')
+print(Fore.GREEN + f'Monitoring directory: [{home_dir}].')
+print(Fore.CYAN + 'Pls use double Ctrl+C to stop.\n')
 
 def safe_path_check(request_path):
     """
@@ -64,15 +63,29 @@ def safe_path_check(request_path):
         abort(403)  # 如果路径不合法，返回403 Forbidden
     return full_path
 
+# 定义basename过滤器函数
+def basename_filter(value):
+    """提取文件路径中的文件名"""
+    return os.path.basename(value)
+
+# 使用装饰器注册basename过滤器
+@app.template_filter('basename')
+def register_basename_filter(value):
+    return basename_filter(value)
+
 @app.before_request
 def check_login():
     # 如果用户没有登录且正在访问的不是登录页或登录成功后需要跳转的页面
-    if 'user' not in session and request.endpoint not in ['login', 'static', 'favicon']:
+    if 'user' not in session and request.endpoint not in ['login', 'favicon', 'static']:
         return redirect(url_for('login'))
 
 @app.route('/')
 def index():
     return redirect(url_for('view_dir', path=''))
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -103,6 +116,8 @@ def logout():
 def view_dir():
     relative_path = request.args.get('path', '')
     page = int(request.args.get('page', 1))
+    items_per_page = int(request.args.get('items', ITEMS_PER_PAGE))
+    imgs_per_page = int(request.args.get('imgs', IMGS_PER_PAGE))
     
     # 安全检查
     full_path = safe_path_check(relative_path)
@@ -110,15 +125,71 @@ def view_dir():
     if os.path.isdir(full_path):
         subdirectories = file_handler.get_subdirectories(full_path)
         if subdirectories:
-            html_content = file_handler.generate_index_html(subdirectories, relative_path, page)
+            search_query = ""
+            total_subdirectories = len(subdirectories)
+            total_pages = (total_subdirectories + items_per_page - 1) // items_per_page
+            start_index = (page - 1) * items_per_page
+            end_index = start_index + items_per_page
+            subdirectories_to_display = subdirectories[start_index:end_index]
+
+            if relative_path == '':
+                relative_path = '/'
+
             file_handler.current_dir = full_path  # 为了实现搜索功能
-            # test
-            print(f'current_dir is [{file_handler.current_dir}].')
+            print(Fore.YELLOW + f'当前目录为 [{file_handler.current_dir}]')
+
+            return render_template('index.html', title=f"当前目录: {relative_path}", query=search_query, path=relative_path, subdirectories=subdirectories_to_display, total_pages=total_pages, page=page)
         else:
             image_files = file_handler.get_image_files(full_path)
             user_agent = request.headers.get('User-Agent', '')
-            html_content = file_handler.generate_gallery_html(image_files, relative_path, page, user_agent)
-        return html_content
+
+            # 获取当前文件夹的名称 relative_path即images的父目录
+            folder_name = os.path.basename(relative_path)
+            total_images = len(image_files)
+            total_pages = (total_images + imgs_per_page - 1) // imgs_per_page
+            start_index = (page - 1) * imgs_per_page
+            end_index = start_index + imgs_per_page
+            images_to_display = image_files[start_index:end_index]
+            is_mobile_flag = is_mobile(user_agent)
+
+            # 确保 relative_path 即image的父目录相对home_dir的相对路径在 last_subdirectories 中
+            if relative_path not in file_handler.last_subdirectories:
+                print(Fore.RED + f"Warning: [{relative_path}] not found in last_subdirectories.")
+                cache_dir = os.path.relpath(file_handler.last_folder_directory, start=file_handler.home_dir)
+                return render_template('not_found.html', cache_dir=cache_dir, num=len(file_handler.last_subdirectories))
+
+            print(Fore.YELLOW + f'当前文件夹中子文件夹的数量: <{len(file_handler.last_subdirectories)}>')
+            # 获取当前文件夹在子文件夹列表中的位置
+            current_folder_index = file_handler.last_subdirectories.index(relative_path)  # 查找relative_path 即image的父目录，在 last_subdirectories 中的索引
+
+            # 获取上一个文件夹和下一个文件夹的路径
+            prev_folder = file_handler.last_subdirectories[current_folder_index - 1] if current_folder_index > 0 else None
+            next_folder = file_handler.last_subdirectories[current_folder_index + 1] if current_folder_index < len(file_handler.last_subdirectories) - 1 else None
+
+            # 准备渲染导航HTML需要的内容
+            if prev_folder:
+                prev_display = 'flex'
+                prev_path = quote(prev_folder)
+                prev_name = os.path.basename(prev_folder)
+            else:
+                prev_display = 'none'
+                prev_path = ''
+                prev_name = ''
+            if next_folder:
+                next_display = 'flex'
+                next_path = quote(next_folder)
+                next_name = os.path.basename(next_folder)
+            else:
+                next_display = 'none'
+                next_path = ''
+                next_name = ''
+
+            # 根据设备类型选择模板文件
+            template_file = "gallery_mobile.html" if is_mobile_flag else "gallery_desktop.html"
+
+            return render_template(template_file, title=folder_name, imgs_num=len(image_files), images=images_to_display,
+                                                  prev_display=prev_display, prev_path=prev_path, prev_name=prev_name, next_display=next_display, next_path=next_path, next_name=next_name,
+                                                  relative_path=relative_path, total_pages=total_pages, page=page)
     else:
         return "<h1>404 Directory not found.</h1>", 404
 
@@ -130,7 +201,12 @@ def view_img():
     full_path = safe_path_check(relative_path)
 
     if os.path.isfile(full_path) and is_img(full_path):
-        return send_file(full_path)
+        img_ext = os.path.splitext(full_path)[1]
+        img_ext = img_ext[1:]  # remove .
+        img_ext = img_ext.lower()
+        img_ext = 'jpeg' if img_ext == 'jpg' else img_ext
+        mimetype = f'image/{img_ext}'
+        return send_file(full_path, mimetype=mimetype)
     else:
         return "<h1>404 Image not found.</h1>", 404
 
@@ -144,8 +220,8 @@ def search():
         return jsonify({"error": "Search query cannot be empty."}), 400
 
     search_results = file_handler.search_folders(query, depth)
-    html_content = file_handler.generate_search_html(search_results, query)
-    return html_content
+
+    return render_template('search.html', title=f"搜索结果: {query}", query=query, results=search_results)
 
 @app.route('/random_subdir')
 def random_subdirectory():
@@ -154,18 +230,16 @@ def random_subdirectory():
 
     # 安全检查
     full_path = safe_path_check(relative_path)
-    # test
-    print(f"当前目录: [{full_path}] 开始获取子目录...")
+
+    print(Fore.YELLOW + f"当前目录: [{full_path}] 开始获取子目录...")
 
     if os.path.isdir(full_path):
         subdirectories = file_handler.get_subdirectories(full_path)
-        # test
-        print(f"成功获取子目录 其长度为: <{len(subdirectories)}> 开始从中随机选择子目录...")
+        print(Fore.GREEN + f"成功获取子目录 其长度为: <{len(subdirectories)}> 开始从中随机选择子目录...")
         if subdirectories:
             # 随机选择一个子目录
             random_dir = choice(subdirectories)
-            # test
-            print(f"随机选中: [{random_dir}]")
+            print(Fore.GREEN + f"随机选中: [{random_dir}]")
             return redirect(url_for('view_dir', path=random_dir))
         else:
             return "<h1>No subdirectories found.</h1>", 404

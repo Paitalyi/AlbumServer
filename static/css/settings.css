@@ -1,0 +1,85 @@
+h2 {
+	font-size: 20px;
+	color: #333;
+	margin-bottom: 10px;
+	border-bottom: 2px solid #007bff;
+	display: inline-block;
+	padding-bottom: 5px;
+}
+
+hr {
+	border: none;
+	border-top: 1px solid #ddd;
+	margin: 20px 0;
+}
+
+
+label {
+	display: block;
+	margin-bottom: 5px;
+	font-weight: bold;
+	color: #555;
+}
+
+input[type="number"] {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 16px;
+}
+
+input[type="number"]:focus {
+	border-color: #007bff;
+	outline: none;
+	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+button {
+	display: inline-block;
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 16px;
+}
+
+.container {
+	max-width: 600px;
+	margin: 0 auto;
+	background: white;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+.action {
+	display: flex;
+	justify-content: space-between;
+	/* 让子元素在主轴上两端对齐 */
+	align-items: center;
+	/* 让子元素在交叉轴上居中对齐，即确保垂直居中 */
+	width: 100%;
+	/* 占满父容器的宽度 */
+}
+
+#saveButton {
+	background: #007bff;
+}
+
+#saveButton:hover {
+	background: #0056b3;
+}
+
+#resetButton {
+	background: #de3848;
+}
+
+#resetButton:hover {
+	background: #582b36;
+}

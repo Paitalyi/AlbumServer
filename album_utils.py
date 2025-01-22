@@ -3,11 +3,13 @@ import re
 import socket
 from threading import Timer
 from urllib.parse import quote
+from colorama import init, Fore
 from watchdog.events import FileSystemEventHandler
 
+# 初始化colorama
+init(autoreset=True)
+
 # 初始化
-ITEMS_PER_PAGE = 100
-IMGS_PER_PAGE = 24
 image_suffixes = ['.jpg', '.jpeg', '.webp', '.png', '.avif', '.gif']
 
 # 工具函数
@@ -52,16 +54,13 @@ class DirectoryEventHandler(FileSystemEventHandler):
     def remove_item(self, item):
         try:
             self.file_handler.subdirectories4home_dir.remove(os.path.relpath(item, start=self.home_dir))
-            # test
-            print('Remove ', item)
+            print(Fore.GREEN + 'Remove ', item)
         except ValueError as e:
             print(str(e))
     def add_item(self, item):
         self.file_handler.subdirectories4home_dir.append(os.path.relpath(item, start=self.home_dir))
         self.throttler.call(self.file_handler)  # 使用节流器进行home_dir的subdir的排序
-        # test
-        print('Add ', item)
-        print('Call throttler')
+        print(Fore.GREEN + 'Add ' + item)
     def on_created(self, event):
         print(f"Create: [{event.src_path}], type: {'directory' if event.is_directory else 'file'}")
         if event.is_directory:
@@ -95,23 +94,19 @@ class GalleryFileHandler():
     def get_subdirectories(self, directory):
         if directory in [self.home_dir, f'{self.home_dir}\\', f'{self.home_dir}/']:
             self.last_folder_directory = directory
-            # test
-            print(f'Change last_folder_directory to [{self.last_folder_directory}].')
+            print(Fore.YELLOW + f'切换缓存文件夹目录为: [{self.last_folder_directory}].')
             self.last_subdirectories = self.subdirectories4home_dir
-            # test
-            print('Use subdirectories4home_dir')
+            print(Fore.GREEN + '使用缓存: subdirectories4home_dir')
             return self.subdirectories4home_dir
         if directory != self.last_folder_directory:
             subdirectories = [os.path.relpath(entry.path, start=self.home_dir) for entry in os.scandir(directory) if entry.is_dir()]
             subdirectories.sort(key=lambda x: list(map(ord, x)))
             if subdirectories:  # subdirectories非空 按照本应用的逻辑 应该进入这些子目录的index页
                 self.last_folder_directory = directory
-                # test
-                print(f'Change last_folder_directory to [{self.last_folder_directory}].')
+                print(Fore.YELLOW + f'切换缓存文件夹路径为: [{self.last_folder_directory}].')
                 self.last_subdirectories = subdirectories
             return subdirectories
-        # test
-        print('Use last_subdirectories')
+        print(Fore.GREEN + '使用缓存: last_subdirectories')
         return self.last_subdirectories
 
     def get_image_files(self, directory):
@@ -124,155 +119,26 @@ class GalleryFileHandler():
             self.last_image_directory = directory
             self.last_image_files = image_files
             return image_files
-        # test
-        print('Use last_image_files')
+        print(Fore.GREEN + '使用缓存: last_image_files')
         return self.last_image_files
 
     def search_folders(self, query, depth="shallow"):
         results = []
         if depth == "shallow":
-            # test
-            print(f"Shallow search in [{self.current_dir}].")
+            print(Fore.CYAN + f"Shallow search in [{self.current_dir}].")
             # 仅搜索当前目录
             for item in os.listdir(self.current_dir):
                 if query.lower() in item.lower() and os.path.isdir(os.path.join(self.current_dir, item)):
                     results.append(os.path.relpath(os.path.join(self.current_dir, item), start=self.home_dir))
         elif depth == "deep":
-            # test
-            print(f"Deep search in [{self.current_dir}].")
+            print(Fore.CYAN + f"Deep search in [{self.current_dir}].")
             # 深度搜索当前目录及其子目录
             for root, dirs, _ in os.walk(self.current_dir):
                 for folder in dirs:
                     if query.lower() in folder.lower():
                         results.append(os.path.relpath(os.path.join(root, folder), start=self.home_dir))
         if len(results) > 1:
-            self.last_folder_directory = f'(Search): {query}'  # 伪路径 为了重复利用last_*的机制
-            # test
-            print(f'Change last_folder_directory to [{self.last_folder_directory}].')
+            self.last_folder_directory = f'(Search): {query}'  # 伪路径 为了重复利用last_* 实现不同图片文件夹的切换
+            print(Fore.YELLOW + f'切换缓存文件夹路径为: [{self.last_folder_directory}].')
             self.last_subdirectories = results
         return results
-    
-    def generate_gallery_html(self, image_paths, relative_parent_path, page=1, user_agent=''):
-        # 获取当前文件夹的名称 relative_parent_path即images的父目录
-        folder_name = os.path.basename(relative_parent_path)
-        total_images = len(image_paths)
-        total_pages = (total_images + IMGS_PER_PAGE - 1) // IMGS_PER_PAGE
-        start_index = (page - 1) * IMGS_PER_PAGE
-        end_index = start_index + IMGS_PER_PAGE
-        images_to_display = image_paths[start_index:end_index]
-        is_mobile_flag = is_mobile(user_agent)
-
-        # 根据设备类型选择 img 标签
-        if is_mobile_flag:
-            images_html = "\n".join([
-                f"<div class='item'><img class='lazy' src='/static/asset/placeholder.svg' data-original='/view_img?path={quote(image_path)}' alt='{folder_name}'></div>"
-                for image_path in images_to_display
-            ])
-        else:
-            images_html = "\n".join([
-                f"<li class='thumb'><a class='rel-link' href='/view_img?path={quote(image_path)}'><img class='lazy' src='/static/asset/placeholder.svg' data-original='/view_img?path={quote(image_path)}' alt='{folder_name}'></a></li>"
-                for image_path in images_to_display
-            ])
-
-        # 确保 relative_parent_path 即image的父目录相对home_dir的相对路径在 last_subdirectories 中
-        if relative_parent_path not in self.last_subdirectories:
-            print(f"Warning: [{relative_parent_path}] not found in last_subdirectories.")
-            with open('templates/not_found.html') as f:
-                template = f.read()
-            cache_dir = os.path.relpath(self.last_folder_directory, start=self.home_dir)
-            return template.format(cache_dir=cache_dir, num=len(self.last_subdirectories))
-
-        # test:
-        print(f'Current len of dirs: <{len(self.last_subdirectories)}>')
-
-        # 获取当前文件夹在子文件夹列表中的位置
-        current_folder_index = self.last_subdirectories.index(relative_parent_path)  # 查找relative_parent_path 即image的父目录，在 last_subdirectories 中的索引
-
-        # 获取上一个套图和下一个套图的路径
-        prev_folder = self.last_subdirectories[current_folder_index - 1] if current_folder_index > 0 else None
-        next_folder = self.last_subdirectories[current_folder_index + 1] if current_folder_index < len(self.last_subdirectories) - 1 else None
-
-        # 生成切换套图按钮
-        nav_html = "<nav id='nav'>"
-        if prev_folder:
-            prev_path = quote(prev_folder)
-            with open('templates/nav-previous.html') as f:
-                template = f.read()
-            nav_html += template.format(path=prev_path, name=os.path.basename(prev_folder))
-        # 填充一行
-        nav_html += "</br>"
-        if next_folder:
-            next_path = quote(next_folder)
-            with open('templates/nav-next.html') as f:
-                template = f.read()
-            nav_html += template.format(path=next_path, name=os.path.basename(next_folder))
-        nav_html += "</nav>"
-
-        # 添加分页 HTML
-        pagination_html = "<div class='pagination'>"
-        if page > 1:
-            pagination_html += f"<a class='prev' href='/view_dir?path={quote(relative_parent_path)}&page={page - 1}'>« </a> "
-        if total_pages > 1:
-            for i in range(1, total_pages + 1):
-                if i == page:
-                    pagination_html += f"<a class='current' href='/view_dir?path={quote(relative_parent_path)}&page={i}'>{i}</a> "
-                else:
-                    pagination_html += f"<a href='/view_dir?path={quote(relative_parent_path)}&page={i}'>{i}</a> "
-        if page < total_pages:
-            pagination_html += f"<a class='next' href='/view_dir?path={quote(relative_parent_path)}&page={page + 1}'> »</a>"
-        pagination_html += "</div>"
-
-        # 根据设备类型选择模板
-        template_file = "templates/gallery_mobile.html" if is_mobile_flag else "templates/gallery_desktop.html"
-
-        with open(template_file, encoding='UTF-8') as f:
-            template = f.read()
-        with open('templates/fix-right.html') as f:
-            fix_right = f.read()
-        return template.format(title = folder_name, 
-                               imgs_num = len(image_paths), 
-                               images = images_html, 
-                               fix_right = fix_right, 
-                               nav = nav_html, 
-                               pagination = pagination_html)
-
-    def generate_index_html(self, folders, relative_parent_path, page=1, search_query=""):
-        total_folders = len(folders)
-        total_pages = (total_folders + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE
-        start_index = (page - 1) * ITEMS_PER_PAGE
-        end_index = start_index + ITEMS_PER_PAGE
-        folders_to_display = folders[start_index:end_index]
-
-        folders_html = "\n".join([
-            f"<li><a href='/view_dir?path={quote(folder)}'>{os.path.basename(folder)}</a></li>"
-            for folder in folders_to_display
-        ])
-        pagination_html = ""
-        if total_pages > 1:
-            pagination_html = "<div class='pagination'>"
-            for i in range(1, total_pages + 1):
-                if i == page:
-                    pagination_html += f"<a class='current' href='/view_dir?path={quote(relative_parent_path)}&page={i}'>{i}</a> "
-                else:
-                    pagination_html += f"<a href='/view_dir?path={quote(relative_parent_path)}&page={i}'>{i}</a> "
-            pagination_html += "</div>"
-        with open('templates/index.html', encoding='UTF-8') as f:
-            template = f.read()
-        if relative_parent_path == '':
-            relative_parent_path = '/'
-        return template.format(title=f"当前目录: {relative_parent_path}", 
-                                query=search_query, 
-                                path=quote(relative_parent_path), 
-                                folders=folders_html, 
-                                pagination=pagination_html)
-
-    def generate_search_html(self, search_results, search_query):
-        search_results_html = "\n".join([
-            f"<li><a href='/view_dir?path={quote(folder)}'>{os.path.basename(folder)}</a></li>"
-            for folder in search_results
-        ])
-        with open('templates/search.html', encoding='UTF-8') as f:
-            template = f.read()
-        return template.format(title=f"搜索结果: {search_query}", 
-                                query=search_query, 
-                                results=search_results_html)

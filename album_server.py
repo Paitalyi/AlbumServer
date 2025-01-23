@@ -7,6 +7,8 @@ from random import choice
 from watchdog.observers import Observer
 from album_utils import *
 
+start_time = time.time()
+
 # Flask 应用初始化
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)  # 用于保护会话信息
@@ -35,12 +37,12 @@ imgs_per_page = args.imgs
 
 # 文件处理器实例
 file_handler = GalleryFileHandler(home_dir)
-print(Fore.GREEN + f'Show gallery in [{home_dir}].')
+print(Fore.GREEN + f'Show galleries in [{home_dir}].')
 
 # 节流器
-def sort_subdir4home_dir(file_handler):
-    file_handler.subdirectories4home_dir.sort(key=lambda x: list(map(ord, x)))
-throttler = Throttler(interval=2, func=sort_subdir4home_dir)  # 节流器 间隔2s
+def sort_cache_folders_for_home_dir(file_handler):
+    file_handler.cache_folders_for_home_dir.sort(key=lambda x: list(map(ord, x)))
+throttler = Throttler(interval=2, func=sort_cache_folders_for_home_dir)  # 节流器 间隔2s
 
 # 事件处理器实例
 event_handler = DirectoryEventHandler(file_handler, throttler)
@@ -50,7 +52,12 @@ observer = Observer()
 observer.schedule(event_handler, home_dir, recursive=False)
 observer.start()
 print(Fore.GREEN + f'Monitoring directory: [{home_dir}].')
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print(Fore.CYAN + f'Initialization took {elapsed_time:.6f} seconds.')
 print(Fore.CYAN + 'Pls use double Ctrl+C to stop.\n')
+
 
 def safe_path_check(request_path):
     """
@@ -154,19 +161,19 @@ def view_dir():
             images_to_display = image_files[start_index:end_index]
             is_mobile_flag = is_mobile(user_agent)
 
-            # 确保 relative_path 即image的父目录相对home_dir的相对路径在 last_subdirectories 中
-            if relative_path not in file_handler.last_subdirectories:
-                print(Fore.RED + f"Warning: [{relative_path}] not found in last_subdirectories.")
-                cache_dir = os.path.relpath(file_handler.last_folder_directory, start=file_handler.home_dir)
-                return render_template('not_found.html', cache_dir=cache_dir, num=len(file_handler.last_subdirectories))
+            # 确保 relative_path 即image的父目录相对home_dir的相对路径在 cache_folders 中
+            if relative_path not in file_handler.cache_folders:
+                print(Fore.RED + f"Warning: [{relative_path}] not found in cache_folders.")
+                cache_dir = os.path.relpath(file_handler.cache_folders_dir, start=file_handler.home_dir)
+                return render_template('not_found.html', cache_dir=cache_dir, num=len(file_handler.cache_folders))
 
-            print(Fore.YELLOW + f'当前文件夹中子文件夹的数量: <{len(file_handler.last_subdirectories)}>')
+            print(Fore.YELLOW + f'当前文件夹中子文件夹的数量: <{len(file_handler.cache_folders)}>')
             # 获取当前文件夹在子文件夹列表中的位置
-            current_folder_index = file_handler.last_subdirectories.index(relative_path)  # 查找relative_path 即image的父目录，在 last_subdirectories 中的索引
+            current_folder_index = file_handler.cache_folders.index(relative_path)  # 查找relative_path 即image的父目录，在 cache_folders 中的索引
 
             # 获取上一个文件夹和下一个文件夹的路径
-            prev_folder = file_handler.last_subdirectories[current_folder_index - 1] if current_folder_index > 0 else None
-            next_folder = file_handler.last_subdirectories[current_folder_index + 1] if current_folder_index < len(file_handler.last_subdirectories) - 1 else None
+            prev_folder = file_handler.cache_folders[current_folder_index - 1] if current_folder_index > 0 else None
+            next_folder = file_handler.cache_folders[current_folder_index + 1] if current_folder_index < len(file_handler.cache_folders) - 1 else None
 
             # 准备渲染导航HTML需要的内容
             if prev_folder:
@@ -265,5 +272,5 @@ if __name__ == "__main__":
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
-        print("\nStop monitoring.")
+        print(f"\nStop monitoring: [{home_dir}].")
     observer.join()

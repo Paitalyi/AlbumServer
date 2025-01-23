@@ -16,7 +16,7 @@
 				<h3 class="title">{{ title }}
 					<span class="images_num">{{ imgs_num }}P</span>
 				</h3>
-				{{ nav }}
+				{% include "nav.html" %}
 			</div>
 
 			<div class="bigimg">
@@ -29,9 +29,9 @@
 			</div>
 
 			<div class="footer">
-				{{ fix_right }}
-				{{ nav }}
-				{{ pagination }}
+				{% include "fix-right.html" %}
+				{% include "nav.html" %}
+				{% include "pagination.html" %}
 			</div>
 		</div>
 		<script type="text/javascript" src="/static/js/jquery.js"></script>

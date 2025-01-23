@@ -23,11 +23,15 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--port', type=int, default=PORT, help='服务器监听的端口号')
 parser.add_argument('--home', type=str, default=HOME_DIR, help='服务器展示的家目录')
+parser.add_argument('--items', type=int, default=ITEMS_PER_PAGE, help='目录页每页的条目数')
+parser.add_argument('--imgs', type=int, default=IMGS_PER_PAGE, help='图片页每页的图片数')
 
 args = parser.parse_args()
 
 port = args.port
 home_dir = args.home
+items_per_page = args.items
+imgs_per_page = args.imgs
 
 # 文件处理器实例
 file_handler = GalleryFileHandler(home_dir)
@@ -116,8 +120,6 @@ def logout():
 def view_dir():
     relative_path = request.args.get('path', '')
     page = int(request.args.get('page', 1))
-    items_per_page = int(request.args.get('items', ITEMS_PER_PAGE))
-    imgs_per_page = int(request.args.get('imgs', IMGS_PER_PAGE))
     
     # 安全检查
     full_path = safe_path_check(relative_path)

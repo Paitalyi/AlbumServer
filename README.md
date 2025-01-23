@@ -6,7 +6,7 @@ Python 3.12
 
 ## 安装依赖
 
-进入项目根目录：
+进入项目根目录，执行命令
 
 ```sh
 $ pip install -r requirements.txt
@@ -14,20 +14,26 @@ $ pip install -r requirements.txt
 
 ## 运行Server
 
-进入项目根目录：
+进入项目根目录
+
+使用方式：
 
 ```sh
-# 命令格式
-$ python album_server.py [PORT] [ALBUM_HOME_DIR]
+# Linux
+$ chmod +x album_server.py
+$ ./album_server.py[ --port PORT --home ALBUM_HOME_DIR --items items_per_index_page --imgs imgs_per_gallery_page]
 
-# e.g.
-$ python album_server.py
-# 默认使用album_server.py中的PORT, HOME_DIR
+# Windows
+$ python album_server.py[ --port PORT --home ALBUM_HOME_DIR --items items_per_index_page --imgs imgs_per_gallery_page]
+```
 
-$ python album_server.py 80 /mnt/media
-# 使用80端口(HTTP默认), 展示/mnt/media目录下面的相册(文件夹)
+示例：
 
-$ python album_server.py 80 "D:\图片"
-# 使用80端口(HTTP默认), 展示"D:\图片"目录下面的相册(文件夹)
+```bash
+# Linux
+$ ./album_server.py # 使用album_server.py中的PORT, HOME_DIR等默认值
+
+# Windows
+$ python album_server.py # 使用album_server.py中的PORT, HOME_DIR等默认值
 ```
 

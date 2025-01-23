@@ -5,6 +5,7 @@ from threading import Timer
 from urllib.parse import quote
 from colorama import init, Fore
 from watchdog.events import FileSystemEventHandler
+from concurrent.futures import ThreadPoolExecutor
 
 # 初始化colorama
 init(autoreset=True)
@@ -80,8 +81,9 @@ class GalleryFileHandler():
         self.cache_images_dir = ''         # 实现cache_images的复用
         self.cache_images = []
         self.cache_folders_dir = home_dir  # 实现cache_folders的复用
-        self.cache_folders_for_home_dir = self.folder_index.get('', []).sort(key=lambda x: list(map(ord, x)))  # 因为此处传递的是地址 因此watchdog修改cache_folders_for_home_dir就是修改folder_index
-        self.cache_folders = self.cache_folders_for_home_dir  # 两处使用: 1.缓存,备用 2.生成前后切换图片文件夹的nav
+        self.folder_index.get('', []).sort(key=lambda x: list(map(ord, x)))  # 排序home_dir中的子文件
+        self.cache_folders_for_home_dir = self.folder_index.get('', [])  # 因为此处传递的是地址 因此watchdog修改cache_folders_for_home_dir就是修改folder_index
+        self.cache_folders = self.cache_folders_for_home_dir  # 两处使用cache_folders: 1.缓存,备用 2.生成前后切换图片文件夹的nav
     def _build_folder_index(self, root_dir):
         """
         构造文件夹索引，只记录所有文件夹路径。
@@ -96,16 +98,24 @@ class GalleryFileHandler():
                 relative_path = ""  # 根目录的相对路径设为空字符串
             # 初始化当前文件夹的子文件夹列表
             folder_index[relative_path] = []
+            subdirs = []
             # 遍历当前目录中的条目
             with os.scandir(current_dir) as entries:
                 for entry in entries:
-                    if entry.is_file() and current_dir != self.home_dir:  # home_dir除外 但不是必须的
-                        break  # 为了加速初始化 如果某个文件夹中如果存在文件 则默认其中没有文件夹 直接跳过
-                        # 会导致: 同时存在文件夹和图片的文件夹 其中的子文件夹在目录树folder_index中很可能缺失
+                    if entry.is_file() and current_dir != self.home_dir:  # home_dir 除外
+                        break  # 如果存在文件，跳过该文件夹的进一步扫描
                     if entry.is_dir():
                         folder_index[relative_path].append(entry.name)
-                        scan_directory(entry.path)
-        scan_directory(root_dir)
+                        subdirs.append(entry.path)
+            return subdirs
+        # 使用线程池并行扫描
+        with ThreadPoolExecutor() as executor:
+            tasks = [root_dir]  # 初始化任务队列
+            while tasks:
+                futures = {executor.submit(scan_directory, task): task for task in tasks}
+                tasks = []
+                for future in futures:
+                    tasks.extend(future.result())  # 将新发现的子目录加入任务队列
         return folder_index
     def get_subdirectories(self, directory):
         rel_path = os.path.relpath(directory, self.home_dir)
@@ -118,7 +128,7 @@ class GalleryFileHandler():
                 sub_folders = [os.path.join(rel_path, sub_foldername) for sub_foldername in sub_foldernames]
             else:
                 sub_folders = sub_foldernames
-            if sub_folders:  # sub_folders非空 按照本应用的逻辑 应该进入这些子目录的index页 所以缓存目录更改
+            if sub_folders:  # sub_folders非空 按照本应用的逻辑 应该进入展示这些子目录的index页 所以缓存目录更改
                 self.cache_folders_dir = directory
                 print(Fore.YELLOW + f'更改文件夹缓存目录为: [{self.cache_folders_dir}]')
                 self.cache_folders = sub_folders

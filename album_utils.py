@@ -80,7 +80,7 @@ class GalleryFileHandler():
         self.cache_images_dir = ''         # 实现cache_images的复用
         self.cache_images = []
         self.cache_folders_dir = home_dir  # 实现cache_folders的复用
-        self.cache_folders_for_home_dir = self.folder_index.get('', [])  # 因为此处传递的是地址 因此watchdog修改cache_folders_for_home_dir就是修改folder_index
+        self.cache_folders_for_home_dir = self.folder_index.get('', []).sort(key=lambda x: list(map(ord, x)))  # 因为此处传递的是地址 因此watchdog修改cache_folders_for_home_dir就是修改folder_index
         self.cache_folders = self.cache_folders_for_home_dir  # 两处使用: 1.缓存,备用 2.生成前后切换图片文件夹的nav
     def _build_folder_index(self, root_dir):
         """

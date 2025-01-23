@@ -2,7 +2,7 @@
 from flask import Flask, request, render_template, send_file, redirect, url_for, session, send_from_directory, abort, jsonify, flash
 import os
 import time
-from sys import argv
+import argparse
 from random import choice
 from watchdog.observers import Observer
 from album_utils import *
@@ -18,16 +18,16 @@ HOME_DIR = r"D:\图片"
 ITEMS_PER_PAGE = 100
 IMGS_PER_PAGE = 24
 
-# 尝试获取port和home_dir参数
-custom_port = None
-custom_home_dir = None
-try:
-    custom_port = int(argv[1])
-    custom_home_dir = argv[2]
-except:
-    pass
-port = custom_port or PORT
-home_dir = custom_home_dir or HOME_DIR
+# 获取参数
+parser = argparse.ArgumentParser()
+
+parser.add_argument('--port', type=int, default=PORT, help='服务器监听的端口号')
+parser.add_argument('--home', type=str, default=HOME_DIR, help='服务器展示的家目录')
+
+args = parser.parse_args()
+
+port = args.port
+home_dir = args.home
 
 # 文件处理器实例
 file_handler = GalleryFileHandler(home_dir)

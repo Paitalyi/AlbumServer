@@ -9,11 +9,6 @@ from album_utils import *
 
 start_time = time.time()
 
-# Flask 应用初始化
-app = Flask(__name__)
-app.config['SECRET_KEY'] = os.urandom(24)  # 用于保护会话信息
-app.config.from_pyfile('config.py')
-
 # 默认值
 PORT = 8888
 HOME_DIR = r"D:\图片"
@@ -55,6 +50,12 @@ observer = DirectoryOnlyObserver()
 observer.schedule(event_handler, home_dir, recursive=True)
 observer.start()
 print(Fore.GREEN + f'Monitoring directory: [{home_dir}].')
+
+# Flask 应用初始化
+app = Flask(__name__)
+app.config['SECRET_KEY'] = os.urandom(24)  # 用于保护会话信息
+app.config['SESSION_COOKIE_NAME'] = f'{__name__} {str(port)}'  # 设置会话cookie名称 防止开启多个服务器相互覆盖登录信息
+app.config.from_pyfile('config.py')
 
 end_time = time.time()
 elapsed_time = end_time - start_time

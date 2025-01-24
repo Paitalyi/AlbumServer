@@ -62,13 +62,20 @@ class DirectoryEventHandler(FileSystemEventHandler):
     def _get_index_of_item(self, item):
         try:
             item_rel_path = os.path.relpath(item, start=self.home_dir)
-            item_index = self.file_handler.folder_index.get(item_rel_path.rsplit(os.sep, maxsplit=1)[0], [])
+            if os.sep not in item_rel_path:  # 如果没有分隔符, 则认为是根目录
+                key_of_index = ''
+            else:
+                key_of_index = item_rel_path.rsplit(os.sep, maxsplit=1)[0]
+            item_index = self.file_handler.folder_index.get(key_of_index, [])
             return item_index
         except ValueError as e:
             print(str(e))
     def remove_item(self, item):
         try:
             item_index = self._get_index_of_item(item)
+            # debug 
+            print(Fore.LIGHTYELLOW_EX + f'Trying to remove {os.path.basename(item)} from folder_index[{os.path.relpath(item, start=self.home_dir).rsplit(os.sep, maxsplit=1)[0]}]')
+            
             item_index.remove(os.path.basename(item))
             print(Fore.YELLOW + f'Remove {item}')
         except ValueError as e:

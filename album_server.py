@@ -4,6 +4,7 @@ import os
 import time
 import argparse
 from random import choice
+from urllib.parse import quote
 from watchdog.observers import Observer
 from album_utils import *
 
@@ -40,16 +41,19 @@ file_handler = GalleryFileHandler(home_dir)
 print(Fore.GREEN + f'Show galleries in [{home_dir}].')
 
 # 节流器
-def sort_cache_folders_for_home_dir(file_handler):
-    file_handler.cache_folders_for_home_dir.sort(key=lambda x: list(map(ord, x)))
-throttler = Throttler(interval=2, func=sort_cache_folders_for_home_dir)  # 节流器 间隔2s
+def sort_index(item_index, timers):
+    item_index.sort(key=lambda x: list(map(ord, x)))
+    print(Fore.GREEN + f'Sort index of timer: {id(item_index)}')
+    del timers[id(item_index)]  # 删除对应的计时器
+    print(Fore.YELLOW + f'Deleted timer: {id(item_index)}.')
+throttler = Throttler(interval=5, func=sort_index)  # 节流器 延时5s
 
 # 事件处理器实例
 event_handler = DirectoryEventHandler(file_handler, throttler)
 # 观察者实例
 observer = Observer()
 # 开始监控
-observer.schedule(event_handler, home_dir, recursive=False)
+observer.schedule(event_handler, home_dir, recursive=True)
 observer.start()
 print(Fore.GREEN + f'Monitoring directory: [{home_dir}].')
 

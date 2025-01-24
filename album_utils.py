@@ -1,11 +1,9 @@
 import os
 import re
-import socket
 from threading import Timer
-from urllib.parse import quote
 from colorama import init, Fore
 from watchdog.events import FileSystemEventHandler
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # 初始化colorama
 init(autoreset=True)
@@ -32,14 +30,19 @@ class Throttler:
     def __init__(self, interval, func):
         self.interval = interval
         self.func = func
-        self.timer = None
+        self.timers = {}  # 存储定时器的字典
+    
     def call(self, *args, **kwargs):
-        # 如果存在活动的定时器，则取消它
-        if self.timer is not None:
-            self.timer.cancel()
+        timer_id = id(args[0]) # 使用第一个参数的id作为唯一标识,实现当传入的第一个参数地址不同时,使用不同的timer
+        # 如果存在对应id的活动的定时器，则取消它
+        if timer_id in self.timers:
+            self.timers[timer_id].cancel()
+            print(Fore.YELLOW + f'Cancel timer {timer_id}')
         # 创建一个新的定时器，时间间隔走完后执行函数
-        self.timer = Timer(self.interval, self.func, args=args, kwargs=kwargs)
-        self.timer.start()
+        self.timers[timer_id] = Timer(self.interval, self.func, args=(*args, self.timers), kwargs=kwargs)
+        self.timers[timer_id].start()
+        print(Fore.GREEN + f'Create new timer {timer_id}')
+
 
 # 监控文件更改
 class DirectoryEventHandler(FileSystemEventHandler):
@@ -48,16 +51,25 @@ class DirectoryEventHandler(FileSystemEventHandler):
         self.file_handler = file_handler
         self.home_dir = self.file_handler.home_dir  # 不会更新 所以存储下来以便使用
         self.throttler = throttler
+    def _get_index_of_item(self, item):
+        try:
+            item_rel_path = os.path.relpath(item, start=self.home_dir)
+            item_index = self.file_handler.folder_index.get(item_rel_path.rsplit(os.sep, maxsplit=1)[0], [])
+            return item_index
+        except ValueError as e:
+            print(str(e))
     def remove_item(self, item):
         try:
-            self.file_handler.cache_folders_for_home_dir.remove(os.path.relpath(item, start=self.home_dir))
-            print(Fore.GREEN + 'Remove ', item)
+            item_index = self._get_index_of_item(item)
+            item_index.remove(os.path.basename(item))
+            print(Fore.YELLOW + f'Remove {item}')
         except ValueError as e:
             print(str(e))
     def add_item(self, item):
-        self.file_handler.cache_folders_for_home_dir.append(os.path.relpath(item, start=self.home_dir))
-        self.throttler.call(self.file_handler)  # 使用节流器进行home_dir的subdir的排序
-        print(Fore.GREEN + 'Add ' + item)
+        item_index = self._get_index_of_item(item)
+        item_index.append(os.path.basename(item))
+        self.throttler.call(item_index)  # 使用节流器对item_index进行排序 防止频繁的排序导致阻塞
+        print(Fore.GREEN + f'Add {item}')
     def on_created(self, event):
         print(f"Create: [{event.src_path}], type: {'directory' if event.is_directory else 'file'}")
         if event.is_directory:
@@ -84,6 +96,11 @@ class GalleryFileHandler():
         self.folder_index.get('', []).sort(key=lambda x: list(map(ord, x)))  # 排序home_dir中的子文件
         self.cache_folders_for_home_dir = self.folder_index.get('', [])  # 因为此处传递的是地址 因此watchdog修改cache_folders_for_home_dir就是修改folder_index
         self.cache_folders = self.cache_folders_for_home_dir  # 两处使用cache_folders: 1.缓存,备用 2.生成前后切换图片文件夹的nav
+    def _get_rel_path_to_home(self, abs_path):
+        rel_path = os.path.relpath(abs_path, start=self.home_dir)
+        if rel_path == '.':
+            rel_path = ''
+        return rel_path
     def _build_folder_index(self, root_dir):
         """
         构造文件夹索引，只记录所有文件夹路径。
@@ -93,34 +110,30 @@ class GalleryFileHandler():
         folder_index = {}
         def scan_directory(current_dir):
             # 获取当前文件夹的相对路径作为 key
-            relative_path = os.path.relpath(current_dir, root_dir)
-            if relative_path == ".":
-                relative_path = ""  # 根目录的相对路径设为空字符串
+            rel_path = self._get_rel_path_to_home(current_dir)
             # 初始化当前文件夹的子文件夹列表
-            folder_index[relative_path] = []
+            folder_index[rel_path] = []
             subdirs = []
             # 遍历当前目录中的条目
             with os.scandir(current_dir) as entries:
                 for entry in entries:
                     if entry.is_file() and current_dir != self.home_dir:  # home_dir 除外
-                        break  # 如果存在文件，跳过该文件夹的进一步扫描
+                        break  # 如果存在文件，跳过该文件夹的进一步扫描 某些时候可能导致文件夹扫描不完全
                     if entry.is_dir():
-                        folder_index[relative_path].append(entry.name)
+                        folder_index[rel_path].append(entry.name)
                         subdirs.append(entry.path)
             return subdirs
         # 使用线程池并行扫描
         with ThreadPoolExecutor() as executor:
-            tasks = [root_dir]  # 初始化任务队列
+            tasks = [ root_dir ]  # 初始化任务队列
             while tasks:
                 futures = {executor.submit(scan_directory, task): task for task in tasks}
                 tasks = []
-                for future in futures:
+                for future in as_completed(futures):
                     tasks.extend(future.result())  # 将新发现的子目录加入任务队列
         return folder_index
     def get_subdirectories(self, directory):
-        rel_path = os.path.relpath(directory, self.home_dir)
-        if rel_path == '.':
-            rel_path = ''
+        rel_path = self._get_rel_path_to_home(directory)
         if directory.rstrip(os.sep) != self.cache_folders_dir.rstrip(os.sep):
             sub_foldernames = self.folder_index.get(rel_path, [])
             sub_foldernames.sort(key=lambda x: list(map(ord, x)))  # LazySort,只有使用时才sort
@@ -139,8 +152,8 @@ class GalleryFileHandler():
     def get_image_files(self, directory):
         if directory.rstrip(os.sep) != self.cache_images_dir.rstrip(os.sep):
             image_files = [
-                os.path.relpath(os.path.join(directory, file), start=self.home_dir)
-                for file in os.listdir(directory) if is_img(file)
+                os.path.relpath(entry.path, start=self.home_dir)
+                for entry in os.scandir(directory) if is_img(entry.name)
             ]
             image_files.sort(key=extract_first_number)
             self.cache_images_dir = directory
@@ -156,9 +169,7 @@ class GalleryFileHandler():
             for sub_dir in sub_dirs:
                 if query.lower() in sub_dir.lower():  # 大小写不敏感
                     results.append(os.path.join(rel_path, sub_dir))
-        rel_path = os.path.relpath(self.current_dir, self.home_dir)
-        if rel_path == '.':
-            rel_path = ''
+        rel_path = self._get_rel_path_to_home(self.current_dir)
         if depth == "shallow":
             print(Fore.CYAN + f"Shallow search in [{self.current_dir}].")
             # 仅搜索当前目录

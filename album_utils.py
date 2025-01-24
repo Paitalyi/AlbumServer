@@ -3,6 +3,7 @@ import re
 from threading import Timer
 from colorama import init, Fore
 from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # 初始化colorama
@@ -43,6 +44,13 @@ class Throttler:
         self.timers[timer_id].start()
         print(Fore.GREEN + f'Create new timer {timer_id}')
 
+# 自定义 observer，只监控目录
+class DirectoryOnlyObserver(Observer):
+    def _add_watch(self, path, *args, **kwargs):
+        # 如果是文件，则跳过监控，防止在因为文件过多，导致OSError: [Errno 28] inotify watch limit reached
+        if not os.path.isdir(path):
+            return None
+        super()._add_watch(path, *args, **kwargs)
 
 # 监控文件更改
 class DirectoryEventHandler(FileSystemEventHandler):

@@ -5,7 +5,6 @@ import time
 import argparse
 from random import choice
 from urllib.parse import quote
-from watchdog.observers import Observer
 from album_utils import *
 
 start_time = time.time()
@@ -51,7 +50,7 @@ throttler = Throttler(interval=5, func=sort_index)  # 节流器 延时5s
 # 事件处理器实例
 event_handler = DirectoryEventHandler(file_handler, throttler)
 # 观察者实例
-observer = Observer()
+observer = DirectoryOnlyObserver()
 # 开始监控
 observer.schedule(event_handler, home_dir, recursive=True)
 observer.start()

@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-from flask import Flask, request, render_template, send_file, redirect, url_for, session, send_from_directory, abort, jsonify, flash
-import os
+from flask import Flask, request, session, render_template, send_file, redirect, url_for, send_from_directory, abort, jsonify, flash
 import time
 import argparse
 from random import choice
 from urllib.parse import quote
+from watchdog.observers import Observer
+from watchdog.events import DirCreatedEvent, FileDeletedEvent, DirMovedEvent
 from album_utils import *
 
 start_time = time.time()
@@ -45,9 +46,11 @@ throttler = Throttler(interval=5, func=sort_index)  # 节流器 延时5s
 # 事件处理器实例
 event_handler = DirectoryEventHandler(file_handler, throttler)
 # 观察者实例
-observer = DirectoryOnlyObserver()
+observer = Observer()
 # 开始监控
-observer.schedule(event_handler, home_dir, recursive=True)
+observer.schedule(event_handler, home_dir, recursive=True, 
+                  event_filter=[DirCreatedEvent, FileDeletedEvent, DirMovedEvent])
+                  # 应该使用DirDeletedEvent 但watchdog会将所有删除事件都理解为FileDeletedEvent
 observer.start()
 print(Fore.GREEN + f'Monitoring directory: [{home_dir}].')
 
@@ -212,7 +215,7 @@ def view_img():
 
     # 安全检查
     full_path = safe_path_check(relative_path)
-
+    
     if os.path.isfile(full_path) and is_img(full_path):
         img_ext = os.path.splitext(full_path)[1]
         img_ext = img_ext[1:]  # remove .

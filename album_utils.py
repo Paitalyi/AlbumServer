@@ -3,7 +3,6 @@ import re
 from threading import Timer
 from colorama import init, Fore
 from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # 初始化colorama
@@ -44,14 +43,6 @@ class Throttler:
         self.timers[timer_id].start()
         print(Fore.GREEN + f'Create new timer {timer_id}')
 
-# 自定义 observer，只监控目录
-class DirectoryOnlyObserver(Observer):
-    def _add_watch(self, path, *args, **kwargs):
-        # 如果是文件，则跳过监控，防止在因为文件过多，导致OSError: [Errno 28] inotify watch limit reached
-        if not os.path.isdir(path):
-            return None
-        super()._add_watch(path, *args, **kwargs)
-
 # 监控文件更改
 class DirectoryEventHandler(FileSystemEventHandler):
     def __init__(self, file_handler, throttler):
@@ -60,44 +51,41 @@ class DirectoryEventHandler(FileSystemEventHandler):
         self.home_dir = self.file_handler.home_dir  # 不会更新 所以存储下来以便使用
         self.throttler = throttler
     def _get_index_of_item(self, item):
-        try:
-            item_rel_path = os.path.relpath(item, start=self.home_dir)
-            if os.sep not in item_rel_path:  # 如果没有分隔符, 则认为是根目录
-                key_of_index = ''
-            else:
-                key_of_index = item_rel_path.rsplit(os.sep, maxsplit=1)[0]
-            item_index = self.file_handler.folder_index.get(key_of_index, [])
-            return item_index
-        except ValueError as e:
-            print(str(e))
+        item_rel_path = os.path.relpath(item, start=self.home_dir)
+        if os.sep not in item_rel_path:  # 如果没有分隔符, 则认为是根目录
+            key_of_index = ''
+        else:
+            key_of_index = item_rel_path.rsplit(os.sep, maxsplit=1)[0]
+        item_index = self.file_handler.folder_index.get(key_of_index)
+        if item_index is None:
+            self.file_handler[key_of_index] = []  # 如果没有对应的key, 则创建一个新的列表
+            item_index = self.file_handler.folder_index.get(key_of_index)
+        return item_index
     def remove_item(self, item):
         try:
             item_index = self._get_index_of_item(item)
             # debug 
-            print(Fore.LIGHTYELLOW_EX + f'Trying to remove {os.path.basename(item)} from folder_index[{os.path.relpath(item, start=self.home_dir).rsplit(os.sep, maxsplit=1)[0]}]')
+            print(Fore.LIGHTMAGENTA_EX + f'Trying to remove <{os.path.basename(item)}> from folder_index[{os.path.relpath(item, start=self.home_dir).rsplit(os.sep, maxsplit=1)[0]}]')
             
             item_index.remove(os.path.basename(item))
             print(Fore.YELLOW + f'Remove {item}')
         except ValueError as e:
-            print(str(e))
+            print(Fore.RED + str(e))
     def add_item(self, item):
         item_index = self._get_index_of_item(item)
         item_index.append(os.path.basename(item))
         self.throttler.call(item_index)  # 使用节流器对item_index进行排序 防止频繁的排序导致阻塞
         print(Fore.GREEN + f'Add {item}')
     def on_created(self, event):
-        print(f"Create: [{event.src_path}], type: {'directory' if event.is_directory else 'file'}")
-        if event.is_directory:
-            self.add_item(event.src_path)
+        print(f"Create: [{event.src_path}]")
+        self.add_item(event.src_path)
     def on_deleted(self, event):
-        print(f"Delete: [{event.src_path}], type: {'directory' if event.is_directory else 'file'}")
-        # if event.is_directory: # 某些watchdog版本 在删除事件后, event.is_directory会出错
+        print(f"Delete: [{event.src_path}]")
         self.remove_item(event.src_path)
     def on_moved(self, event):
-        print(f"Move: [{event.src_path}] -> [{event.dest_path}], type: {'directory' if event.is_directory else 'file'}")
-        if event.is_directory:
-            self.remove_item(event.src_path)
-            self.add_item(event.dest_path)
+        print(f"Move: [{event.src_path}] -> [{event.dest_path}]")
+        self.remove_item(event.src_path)
+        self.add_item(event.dest_path)
 
 # 文件工具类
 class GalleryFileHandler():

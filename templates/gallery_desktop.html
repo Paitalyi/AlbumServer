@@ -19,16 +19,16 @@
 				{% include "nav.html" %}
 			</div>
 
-			<ul class='gallery'>
+			<ul class="gallery">
 				{% for image_path in images %}
 				<li class="thumb">
-					<a class="rel-link" target="_blank" href="/view_img?path={{ image_path | urlencode }}">
-						<img class="lazy" src="/static/asset/placeholder.svg"
-							data-original="/view_img?path={{ image_path | urlencode }}" alt="{{ folder_name }}">
-					</a>
+					<img class="lazy" src="/static/asset/placeholder.svg"
+						data-original="/view_img?path={{ image_path | urlencode }}" alt="{{ folder_name }}">
 				</li>
 				{% endfor %}
 			</ul>
+
+			{% include "fullscreen_viewer.html" %}
 
 			<div class="footer">
 				{% include "fix-right.html" %}

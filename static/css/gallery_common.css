@@ -8,9 +8,8 @@
 
 body {
 	min-height: 100vh;
-	/* 确保body占满整个视口 */
 	margin: 0;
-	/* 移除默认外边距 */
+	padding: 0;
 }
 
 img {

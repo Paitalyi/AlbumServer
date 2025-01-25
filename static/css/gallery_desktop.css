@@ -3,6 +3,19 @@
 	--img-radius: 10px;
 }
 
+body.locked {
+	overflow: hidden;
+	/* 隐藏滚动条 */
+	height: 100%;
+	/* 防止页面高度变化 */
+	width: 100%;
+	/* 防止页面宽度变化 */
+	position: fixed;
+	/* 锁定页面位置 */
+	top: 0;
+	left: 0;
+}
+
 li::marker {
 	content: none;
 	/* 移除标记符号 */
@@ -57,42 +70,114 @@ li::marker {
 	/* 悬停时有轻微缩放效果 */
 }
 
-/* waterfall样式1 */
-/* .waterfall {
-	width: 80%;
-	column-gap: 10px;
-	column-count: 4;
-	margin: 0 auto;
+.fullscreen-viewer {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.9);
+	justify-content: space-between;
+	/* center垂直居中 */
+	align-items: center;
+	/* 水平居中 */
+	z-index: 9999;
 }
 
-.item {
+.fullscreen-nav-button {
+	background: none;
+	border: none;
+	cursor: pointer;
 	padding: 10px;
-	margin-bottom: 10px;
-	break-inside: avoid;
-	border: 1px solid #000;
-} */
-
-
-/* waterfall样式2 */
-/* .waterfall {
-    column-count: 3;
-    column-gap: 15px;
-}
-.item {
-	display: inline-block;
-	break-inside: avoid;
-} */
-
-
-/* waterfall响应式设计 自动列数 */
-/* @media (min-width: 992px) and (max-width: 1300px) {
-	.waterfall {
-		column-count: 3;
-	}
+	margin: 5px;
+	transition: transform 0.2s;
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
-	.waterfall {
-		column-count: 2;
-	}
-} */
+.fullscreen-nav-button:hover {
+	transform: scale(1.1);
+}
+
+.fullscreen-nav-button svg {
+	width: 24px;
+	height: 24px;
+	fill: currentColor;
+	color: #fff;
+	transition: color 0.2s;
+}
+
+.fullscreen-nav-button:hover svg {
+	color: #aaa;
+}
+
+.fullscreen-nav-button:focus {
+	outline: none;
+	/* 移除默认的焦点轮廓 */
+	box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+	/* 添加自定义的焦点指示器 */
+}
+
+/* 透明覆盖层样式 */
+.overlay {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	z-index: 2;
+	/* 高于图片，但低于按钮 */
+	cursor: pointer;
+	background: rgba(255, 255, 255, 0);
+	/* 完全透明 */
+	pointer-events: none;
+	/* 忽略鼠标事件 */
+}
+
+/* 恢复左右点击区域的事件 */
+#leftOverlay,
+#rightOverlay {
+	pointer-events: auto;
+	/* 恢复事件捕获 */
+	cursor: pointer;
+	/* 显示可点击手型 */
+}
+
+/* 左侧覆盖层 */
+#leftOverlay {
+	left: 0;
+	width: 50%;
+}
+
+/* 右侧覆盖层 */
+#rightOverlay {
+	right: 0;
+	width: 50%;
+}
+
+#fullscreenImage {
+	max-width: 100%;
+	max-height: 100%;
+	user-select: none;
+	z-index: 1;
+}
+
+.progress-indicator {
+	position: absolute;
+	/* 绝对定位以便放在任意位置 */
+	top: 20px;
+	/* 距离顶部20px */
+	left: 20px;
+	transform: translateX(-50%);
+	/* 水平居中调整 */
+	font-size: 18px;
+	/* 字体大小 */
+	color: white;
+	/* 字体颜色 */
+}
+
+.fullscreen-close-button {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	font-size: 30px;
+	color: white;
+	cursor: pointer;
+}

@@ -1,8 +1,22 @@
-<h1>Error: Folder not found.</h1>
-<p>Current folder is [{{ cache_dir }}].</p>
-<p>[{{ cache_dir }}] has {{ num }} subdirectories.</p>
-<h3>Possible solution:</h3>
-<ul>
-	<li>Go to the parent page of the folder you want to view.</li>
-	<li>Refresh it.</li>
-</ul>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Error: Folder not found.</title>
+		<link rel="stylesheet" href="/static/css/common.css">
+		<link rel="stylesheet" href="/static/css/dark_mode.css">
+		<script src="/static/js/dark_mode.js"></script>
+	</head>
+	<body>
+		<h1>Error: Folder not found.</h1>
+		<p>Current folder is [{{ cache_dir }}].</p>
+		<p>[{{ cache_dir }}] has {{ num }} subdirectories.</p>
+		<h3>Possible solution:</h3>
+		<ul>
+			<li>Go to the parent page of the folder you want to view.</li>
+			<li>Refresh it.</li>
+		</ul>
+
+	</body>
+</html>

@@ -3,14 +3,15 @@
 	<head>
 		<meta charset="utf-8">
 		<title>{{ title }}</title>
-		<meta name="keywords" content="Gallery" />
-		<meta name="description" content="Gallery" />
 		<link rel="stylesheet" href="/static/css/common.css">
 		<link rel="stylesheet" href="/static/css/gallery_common.css">
 		<link rel="stylesheet" href="/static/css/gallery_desktop.css">
+		<link rel="stylesheet" href="/static/css/dark_mode.css">
+		<script src="/static/js/dark_mode.js"></script>
 	</head>
 	<body>
 		<div class="main">
+			{% include "dark_mode.html" %}
 			<div id="reading_progress"></div>
 			<div class="header">
 				<h3 class="title">{{ title }}
@@ -36,11 +37,11 @@
 				{% include "pagination.html" %}
 			</div>
 		</div>
-		<script type="text/javascript" src="/static/js/jquery.js"></script>
-		<script type="text/javascript" src="/static/js/config.js"></script>
-		<script type="text/javascript" src="/static/js/gallery_common.js"></script>
-		<script type="text/javascript" src="/static/js/lazyload.js"></script>
-		<script type="text/javascript" src="/static/js/masonry.js"></script>
-		<script type="text/javascript" src="/static/js/gallery_desktop.js"></script>
+		<script src="/static/js/jquery.js"></script>
+		<script src="/static/js/config.js"></script>
+		<script src="/static/js/gallery_common.js"></script>
+		<script src="/static/js/lazyload.js"></script>
+		<script src="/static/js/masonry.js"></script>
+		<script src="/static/js/gallery_desktop.js"></script>
 	</body>
 </html>

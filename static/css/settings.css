@@ -1,15 +1,15 @@
 h2 {
 	font-size: 20px;
-	color: #333;
+	color: var(--foreground-color);
 	margin-bottom: 10px;
-	border-bottom: 2px solid #007bff;
+	border-bottom: 2px solid var(--main-color);
 	display: inline-block;
 	padding-bottom: 5px;
 }
 
 hr {
 	border: none;
-	border-top: 1px solid #ddd;
+	border-top: 1px solid var(--border-color);
 	margin: 20px 0;
 }
 
@@ -18,21 +18,21 @@ label {
 	display: block;
 	margin-bottom: 5px;
 	font-weight: bold;
-	color: #555;
+	color: var(--foreground-color);
 }
 
 input[type="number"] {
 	width: 95%;
 	padding: 10px;
-	border: 1px solid #ccc;
+	border: 1px solid var(--border-color);
 	border-radius: 4px;
 	font-size: 16px;
 }
 
 input[type="number"]:focus {
-	border-color: #007bff;
+	border-color: var(--main-color);
 	outline: none;
-	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+	box-shadow: 0 0 5px var(--semi-transparent-blue);
 }
 
 button {
@@ -50,7 +50,7 @@ button {
 	margin: 0 auto;
 	background: white;
 	border-radius: 8px;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 6px var(--barely-transparent-black);
 	padding: 20px;
 }
 
@@ -69,17 +69,17 @@ button {
 }
 
 #saveButton {
-	background: #007bff;
+	background: var(--main-color);
 }
 
 #saveButton:hover {
-	background: #0056b3;
+	background: var(--grey-main-color);
 }
 
 #resetButton {
-	background: #de3848;
+	background: var(--light-red);
 }
 
 #resetButton:hover {
-	background: #582b36;
+	background: var(--dark-red);
 }

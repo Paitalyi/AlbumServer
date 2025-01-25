@@ -28,7 +28,7 @@ img {
 	left: 0;
 	width: 0%;
 	height: 6px;
-	background-color: #007bff;
+	background-color: var(--main-color);
 	z-index: 9999;
 	transition: width 0.1s ease-out;
 	/* 为了平滑显示进度条 */
@@ -46,9 +46,9 @@ img {
 .images_num {
 	display: inline-block;
 	/* 使标签适合内容大小 */
-	background-color: #f8f8f8;
+	background-color: var(--grey-backgroud-color);
 	/* 浅灰色背景 */
-	color: #333;
+	color: var(--foreground-color);
 	/* 文字颜色 */
 	font-size: 14px;
 	/* 字体大小 */
@@ -58,7 +58,7 @@ img {
 	/* 内边距 */
 	border-radius: 20px;
 	/* 圆角 */
-	border: 1px solid #ddd;
+	border: 1px solid var(--border-color);
 	/* 边框颜色 */
 	text-align: center;
 	/* 居中对齐 */
@@ -92,20 +92,26 @@ img {
 	/* 右对齐 */
 }
 
-.nav-previous svg,
-.nav-next svg {
+.nav-previous img,
+.nav-next img {
 	width: 16px;
 	height: 16px;
-	fill: #007bff;
-	margin-right: 5px;
 	transition: transform 0.3s ease;
 }
 
-.nav-previous:hover svg {
+.nav-previous img {
+	margin-left: 5px;
+}
+
+.nav-next img {
+	margin-right: 5px;
+}
+
+.nav-previous:hover img {
 	transform: translateX(-5px);
 }
 
-.nav-next:hover svg {
+.nav-next:hover img {
 	transform: translateX(5px);
 }
 
@@ -113,14 +119,14 @@ img {
 .nav-next .next a {
 	font-size: 16px;
 	text-decoration: none;
-	color: #007bff;
+	color: var(--main-color);
 	font-weight: bold;
 	transition: color 0.3s ease;
 }
 
 .nav-previous .prev a:hover,
 .nav-next .next a:hover {
-	color: #0056b3;
+	color: var(--grey-main-color);
 }
 
 .pagination {
@@ -147,18 +153,13 @@ img {
 	font-weight: bold;
 	padding: 5px 10px;
 	margin: 8px;
-	color: #1967d2;
+	color: var(--main-color);
 	text-decoration: none;
-}
-
-/* 鼠标悬停时的样式 */
-.pagination a:hover {
-	color: #e34449;
 }
 
 /* 当前页的样式 */
 .pagination a.current {
-	border: 2px #337ab7 solid;
+	border: 2px var(--main-color) solid;
 	border-radius: 30px;
 	cursor: default;
 	/* 禁用点击手型光标 */
@@ -172,10 +173,10 @@ img {
 	right: 2rem;
 	top: 60%;
 	transform: translateY(-50%);
-	color: #f2f2f2;
+	color: var(--dark-foreground-color);
 	font-size: 1rem;
 	padding: 1rem;
-	background: rgba(0, 0, 0, 0.6);
+	background: var(--semi-transparent-black);
 	border-radius: 1rem;
 	display: flex;
 	flex-direction: column;
@@ -219,11 +220,8 @@ img {
 	display: none;
 }
 
-.icon {
-	width: 1em;
-	height: 1em;
+.fix-right-icon {
+	width: 48px;
+	height: 48px;
 	vertical-align: middle;
-	fill: currentColor;
-	overflow: hidden;
-	font-size: 3rem;
 }

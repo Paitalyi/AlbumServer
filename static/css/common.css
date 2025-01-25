@@ -1,3 +1,29 @@
+:root {
+	--background-color: #fff;
+	--dark-background-color: #000;
+	--foreground-color: #000;
+	--dark-foreground-color: #c8c8c8;
+	--main-color: #007bff;
+	--dark-main-color: #1980db;
+	--grey-main-color: #0056b3;
+	--a-visited-color: #800080;
+	--dark-a-visited-color: #9370db;
+	--border-color: #ccc;
+	--dark-border-color: #808080;
+	--little-transparent-black: rgba(0, 0, 0, 0.9);
+	--semi-transparent-black: rgba(0, 0, 0, 0.6);
+	--barely-transparent-black: rgba(0, 0, 0, 0.1);
+	--grey-backgroud-color: #f8f8f8;
+	--button-foreground-color: #fff;
+	--flash-msg-backgroud-color: #f8d7da;
+	--flash-msg-foregroud-color: #721c24;
+	--semi-transparent-blue: rgba(0, 123, 255, 0.5);
+	--semi-transparent-white: rgba(255, 255, 255, 0.5);
+	--transparent-white: rgba(255, 255, 255, 0);
+	--light-red: #de3848;
+	--dark-red: #582b36;
+}
+
 body {
 	cursor: url(/static/asset/cursor_blue.png), default
 }

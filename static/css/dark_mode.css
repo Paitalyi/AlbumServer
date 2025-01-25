@@ -1,0 +1,80 @@
+body.dark-mode {
+	background-color: var(--dark-background-color);
+	color: var(--dark-foreground-color);
+	font-weight: bold;
+}
+
+body.dark-mode h2 {
+	color: var(--dark-foreground-color);
+}
+
+body.dark-mode a {
+	color: var(--dark-main-color);
+}
+
+body.dark-mode a:visited {
+	color: var(--dark-a-visited-color);
+}
+
+body.dark-mode div {
+	background-color: var(--dark-background-color);
+}
+
+body.dark-mode img {
+	filter: brightness(0.7) contrast(1.2);
+}
+body.dark-mode p {
+	color: var(--dark-foreground-color);
+}
+body.dark-mode form {
+	background-color: var(--dark-background-color);
+}
+
+body.dark-mode input {
+	background-color: var(--dark-background-color);
+	border: 2px solid var(--dark-border-color);
+	color: var(--dark-foreground-color);
+}
+
+body.dark-mode button {
+	background-color: var(--dark-main-color);
+	color: var(--dark-foreground-color);
+}
+
+body.dark-mode label {
+	color: var(--dark-foreground-color);
+}
+
+body.dark-mode div.fixed-right {
+	background: var(--semi-transparent-black);
+}
+
+#night-mode-toggle {
+	position: fixed;
+	/* 固定定位 */
+	top: 12px;
+	/* 距离顶部 像素 */
+	left: 12px;
+	/* 距离左侧 像素 */
+	width: 36px;
+	/* 宽度 */
+	height: 36px;
+	/* 高度 */
+	color: #fff;
+	/* 文字颜色 */
+	background-color: transparent;
+	/* 背景颜色 */
+	text-align: center;
+	/* 文字居中 */
+	line-height: 36px;
+	/* 行高与高度相同，使文字垂直居中 */
+	cursor: pointer;
+	/* 鼠标悬停时显示为指针 */
+	z-index: 1000;
+	/* 确保元素在其他内容之上 */
+}
+
+#night-mode-icon {
+	width: 36px;
+	height: 36px;
+}

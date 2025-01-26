@@ -38,6 +38,7 @@ print(Fore.GREEN + f'Show galleries in [{home_dir}].')
 # 节流器
 def sort_index(item_index):
     item_index.sort(key=lambda x: list(map(ord, x)))
+    print(Fore.GREEN + "Index sorted.")
 throttler = Throttler(interval=2, func=sort_index)  # 节流器 延时2s
 
 # 事件处理器实例

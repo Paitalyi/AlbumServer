@@ -35,7 +35,8 @@ class Throttler:
         self.func = func
         self.timer = None
     def call(self, *args, **kwargs):
-        self.timer.cancel()
+        if self.timer:
+            self.timer.cancel()
         # 创建一个新的定时器，时间间隔走完后执行函数
         self.timer = Timer(self.interval, self.func, args=args, kwargs=kwargs)
         self.timer.start()
@@ -90,15 +91,19 @@ class GalleryFileHandler():
         folder_index.sort(key=lambda x: list(map(ord, x)))
         return folder_index
     def get_subdir(self, directory):
-        if directory.rstrip(os.sep) != self.cache_folders_dir.rstrip(os.sep):
+        if directory.rstrip(os.sep) == self.cache_folders_dir.rstrip(os.sep):
+            sub_dirs = self.cache_folders
+            print(Fore.GREEN + f'命中文件夹列表缓存: [{self.cache_folders_dir}]')
+        elif os.path.relpath(directory, self.home_dir) == '.':
+            self.cache_folders_dir = self.home_dir
+            print(Fore.YELLOW + f'更改文件夹缓存目录为: [{self.cache_folders_dir}]')
+            sub_dirs = self.cache_folders_for_home_dir
+        else:
             sub_dirs = self._get_folder_index(directory)
             if sub_dirs:  # sub_dirs非空 按照本应用的逻辑 应该进入展示这些子目录的index页 所以缓存目录更改
                 self.cache_folders_dir = directory
                 print(Fore.YELLOW + f'更改文件夹缓存目录为: [{self.cache_folders_dir}]')
                 self.cache_folders = sub_dirs
-        else:
-            sub_dirs = self.cache_folders
-            print(Fore.GREEN + f'命中文件夹列表缓存: [{self.cache_folders_dir}]')
         return sub_dirs
     def get_image_files(self, directory):
         if directory.rstrip(os.sep) != self.cache_images_dir.rstrip(os.sep):

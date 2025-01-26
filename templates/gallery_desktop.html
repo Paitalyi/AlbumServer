@@ -4,12 +4,10 @@
 		<meta charset="utf-8">
 		<title>{{ title }}</title>
 		<link rel="stylesheet" href="/static/css/common.css">
-		<link rel="stylesheet" href="/static/css/gallery_common.css">
-		<link rel="stylesheet" href="/static/css/gallery_desktop.css">
 		<link rel="stylesheet" href="/static/css/dark_mode.css">
 		<script src="/static/js/dark_mode.js"></script>
 	</head>
-	<body>
+	<body id="gallery-body">
 		<div class="main">
 			{% include "dark_mode.html" %}
 			<div id="reading_progress"></div>
@@ -23,7 +21,7 @@
 			<ul class="gallery">
 				{% for image_path in images %}
 				<li class="thumb">
-					<img class="lazy" src="/static/asset/placeholder.svg"
+					<img class="lazy gallery-img" src="/static/asset/placeholder.svg"
 						data-original="/view_img?path={{ image_path | urlencode }}" alt="{{ folder_name }}">
 				</li>
 				{% endfor %}

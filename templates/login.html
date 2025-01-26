@@ -5,32 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Album Server</title>
 	<link rel="stylesheet" href="/static/css/common.css">
-	<link rel="stylesheet" href="/static/css/login.css">
 	<link rel="stylesheet" href="/static/css/dark_mode.css">
 	<script src="/static/js/dark_mode.js"></script>
 </head>
-<body>
+<body id="login-body">
 	{% include "dark_mode.html" %}
-    <h2>登录</h2>
-    <form method="POST">
+    <h2 id="login-h2">登录</h2>
+    <form method="POST" id="login-form">
         <label for="username">用户名</label>
-        <input type="text" id="username" name="username" required>
+        <input class="login-input" type="text" id="username" name="username" required>
 
         <label for="password">密码</label>
-        <input type="password" id="password" name="password" required>
+        <input class="login-input" type="password" id="password" name="password" required>
 
-        <button type="submit">登录</button>
+        <button type="submit" id="login-button">登录</button>
     </form>
     
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul>
-                {% for category, message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-
+    <p id="login-msg">{{ msg }}</p>
 </body>
 </html>

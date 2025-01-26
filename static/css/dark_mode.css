@@ -1,77 +1,75 @@
 body.dark-mode {
-	background-color: var(--dark-background-color);
-	color: var(--dark-foreground-color);
+	background-color: var(--dark-background-color) !important;
+	color: var(--dark-foreground-color) !important;
 	font-weight: bold;
 }
 
-body.dark-mode h2 {
-	color: var(--dark-foreground-color);
-}
-
 body.dark-mode a {
-	color: var(--dark-main-color);
+	color: var(--dark-primary-color) !important;
 }
 
 body.dark-mode a:visited {
-	color: var(--dark-a-visited-color);
+	color: var(--dark-secondary-color) !important;
 }
 
 body.dark-mode div {
-	background-color: var(--dark-background-color);
+	background-color: var(--dark-background-color) !important;
 }
 
 body.dark-mode img {
-	filter: brightness(0.7) contrast(1.2);
+	filter: brightness(0.7) contrast(1.2) !important;
 }
+
 body.dark-mode p {
-	color: var(--dark-foreground-color);
+	color: var(--dark-foreground-color) !important;
 }
+
 body.dark-mode form {
-	background-color: var(--dark-background-color);
+	background-color: var(--dark-form-background-color) !important;
 }
 
 body.dark-mode input {
-	background-color: var(--dark-background-color);
-	border: 2px solid var(--dark-border-color);
-	color: var(--dark-foreground-color);
+	background-color: var(--dark-background-color) !important;
+	border: 2px solid var(--dark-border-color) !important;
+	color: var(--dark-foreground-color) !important;
 }
 
 body.dark-mode button {
-	background-color: var(--dark-main-color);
-	color: var(--dark-foreground-color);
+	background-color: var(--dark-primary-color) !important;
+	color: var(--dark-button-foreground-color) !important;
 }
 
 body.dark-mode label {
-	color: var(--dark-foreground-color);
+	color: var(--dark-foreground-color) !important;
 }
 
 body.dark-mode div.fixed-right {
-	background: var(--semi-transparent-black);
+	background: var(--semi-transparent-black) !important;
+}
+
+body.dark-mode div.nav-drop {
+	box-shadow: -3px 0 10px var(--barely-transparent-white) !important;
+}
+
+body.dark-mode button#resetButton {
+	background-color: var(--dark-danger-color) !important;
+}
+
+body.dark-mode form#search-form {
+	background-color: var(--dark-background-color) !important;
 }
 
 #night-mode-toggle {
 	position: fixed;
-	/* 固定定位 */
 	top: 12px;
-	/* 距离顶部 像素 */
 	left: 12px;
-	/* 距离左侧 像素 */
 	width: 36px;
-	/* 宽度 */
 	height: 36px;
-	/* 高度 */
-	color: #fff;
-	/* 文字颜色 */
-	background-color: transparent;
-	/* 背景颜色 */
+	background-color: transparent !important;
 	text-align: center;
-	/* 文字居中 */
 	line-height: 36px;
-	/* 行高与高度相同，使文字垂直居中 */
 	cursor: pointer;
-	/* 鼠标悬停时显示为指针 */
 	z-index: 1000;
-	/* 确保元素在其他内容之上 */
 }
 
 #night-mode-icon {

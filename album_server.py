@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from flask import Flask, request, session, render_template, send_file, redirect, url_for, send_from_directory, abort, jsonify, flash
+from flask import Flask, request, session, render_template, send_file, redirect, url_for, send_from_directory, abort, jsonify
 import time
 import argparse
 from random import choice
@@ -36,19 +36,16 @@ file_handler = GalleryFileHandler(home_dir)
 print(Fore.GREEN + f'Show galleries in [{home_dir}].')
 
 # 节流器
-def sort_index(item_index, timers):
+def sort_index(item_index):
     item_index.sort(key=lambda x: list(map(ord, x)))
-    print(Fore.GREEN + f'Sort index of timer: {id(item_index)}')
-    del timers[id(item_index)]  # 删除对应的计时器
-    print(Fore.YELLOW + f'Deleted timer: {id(item_index)}.')
-throttler = Throttler(interval=5, func=sort_index)  # 节流器 延时5s
+throttler = Throttler(interval=2, func=sort_index)  # 节流器 延时2s
 
 # 事件处理器实例
 event_handler = DirectoryEventHandler(file_handler, throttler)
 # 观察者实例
 observer = Observer()
 # 开始监控
-observer.schedule(event_handler, home_dir, recursive=True, 
+observer.schedule(event_handler, home_dir, recursive=False, 
                   event_filter=[DirCreatedEvent, FileDeletedEvent, DirMovedEvent])
                   # 应该使用DirDeletedEvent 但watchdog会将所有删除事件都理解为FileDeletedEvent
 observer.start()
@@ -77,7 +74,7 @@ def safe_path_check(request_path):
         full_path = os.path.abspath(os.path.join(file_handler.home_dir, request_path))
 
     # 确保 full_path 是 home_dir 下的路径
-    if not full_path.startswith(file_handler.home_dir):
+    if not path_is_within(full_path, file_handler.home_dir):
         abort(403)  # 如果路径不合法，返回403 Forbidden
     return full_path
 
@@ -117,17 +114,15 @@ def login():
 
         if username == admin_username and password == admin_password:
             session['user'] = username
-            flash('登陆成功', 'success')
             return redirect(url_for('index'))
         else:
-            flash('用户名或密码错误', 'danger')
+            return render_template('login.html', msg='用户名或密码错误！')
 
-    return render_template('login.html')
+    return render_template('login.html', msg='')
 
 @app.route('/logout')
 def logout():
     session.pop('user', None)
-    flash('登出成功', 'info')
     return redirect(url_for('index'))
 
 @app.route('/view_dir')
@@ -139,14 +134,14 @@ def view_dir():
     full_path = safe_path_check(relative_path)
 
     if os.path.isdir(full_path):
-        subdirectories = file_handler.get_subdirectories(full_path)
-        if subdirectories:
+        subdir = file_handler.get_subdir(full_path)
+        if subdir:
             search_query = ""
-            total_subdirectories = len(subdirectories)
-            total_pages = (total_subdirectories + items_per_page - 1) // items_per_page
+            total_subdir = len(subdir)
+            total_pages = (total_subdir + items_per_page - 1) // items_per_page
             start_index = (page - 1) * items_per_page
             end_index = start_index + items_per_page
-            subdirectories_to_display = subdirectories[start_index:end_index]
+            subdir_to_display = subdir[start_index:end_index]
 
             if relative_path == '':
                 relative_path = '/'
@@ -154,7 +149,7 @@ def view_dir():
             file_handler.current_dir = full_path  # 为了实现搜索功能
             print(Fore.YELLOW + f'当前目录为 [{file_handler.current_dir}]')
 
-            return render_template('index.html', title=f"当前目录: {relative_path}", query=search_query, path=relative_path, subdirectories=subdirectories_to_display, total_pages=total_pages, page=page)
+            return render_template('index.html', title=f"当前目录: {relative_path}", query=search_query, path=relative_path, subdir=subdir_to_display, total_pages=total_pages, page=page)
         else:
             image_files = file_handler.get_image_files(full_path)
             user_agent = request.headers.get('User-Agent', '')
@@ -229,14 +224,11 @@ def view_img():
 @app.route('/search', methods=['POST'])
 def search():
     query = request.form.get('query', '')
-    depth = request.form.get('depth', 'shallow')
-
     # 检查 query 是否为空
     if not query:
         return jsonify({"error": "Search query cannot be empty."}), 400
 
-    search_results = file_handler.search_folders(query, depth)
-
+    search_results = file_handler.search_folders(query)
     return render_template('search.html', title=f"搜索结果: {query}", query=query, results=search_results)
 
 @app.route('/random_subdir')
@@ -250,15 +242,15 @@ def random_subdirectory():
     print(Fore.YELLOW + f"当前目录: [{full_path}] 开始获取子目录...")
 
     if os.path.isdir(full_path):
-        subdirectories = file_handler.get_subdirectories(full_path)
-        print(Fore.GREEN + f"成功获取子目录 其长度为: <{len(subdirectories)}> 开始从中随机选择子目录...")
-        if subdirectories:
+        subdir = file_handler.get_subdir(full_path)
+        print(Fore.GREEN + f"成功获取子目录 其长度为: <{len(subdir)}> 开始从中随机选择子目录...")
+        if subdir:
             # 随机选择一个子目录
-            random_dir = choice(subdirectories)
+            random_dir = choice(subdir)
             print(Fore.GREEN + f"随机选中: [{random_dir}]")
             return redirect(url_for('view_dir', path=random_dir))
         else:
-            return "<h1>No subdirectories found.</h1>", 404
+            return "<h1>No subdir found.</h1>", 404
     else:
         return "<h1>Invalid directory path.</h1>", 404
 

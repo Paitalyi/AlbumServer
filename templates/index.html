@@ -5,20 +5,13 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>{{ title }}</title>
 		<link rel="stylesheet" href="/static/css/common.css">
-		<link rel="stylesheet" href="/static/css/index.css">
 		<link rel="stylesheet" href="/static/css/dark_mode.css">
 		<script src="/static/js/dark_mode.js"></script>
 	</head>
 	<body>
 		{% include "dark_mode.html" %}
 		<div class="header">
-			<form action="/search" method="POST">
-				<input type="text" name="query" value="{{ query }}" placeholder="请输入搜索内容">
-				<br />
-				<label for="search">深度搜索</label>
-				<input type="checkbox" id="search" name="depth" value="deep">
-				<button type="submit">搜索</button>
-			</form>
+			{% include "search_form.html" %}
 		</div>
 		<div id="dropdown">
 			<div class="sidebar-trigger">
@@ -60,8 +53,8 @@
 			</div>
 		</div>
 
-		<ul>
-			{% for folder in subdirectories %}
+		<ul id="dir-list">
+			{% for folder in subdir %}
 			<li>
 				<a href="/view_dir?path={{ folder | urlencode }}">{{ folder | basename }}</a>
 			</li>

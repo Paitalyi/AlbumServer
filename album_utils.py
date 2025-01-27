@@ -1,5 +1,6 @@
 import os
 import re
+import stat
 from threading import Timer
 from colorama import init, Fore
 from watchdog.events import FileSystemEventHandler
@@ -27,6 +28,9 @@ def path_is_within(sub_path, parent_path):
     sub_path = os.path.abspath(sub_path)
     parent_path = os.path.abspath(parent_path)
     return sub_path == parent_path or sub_path.startswith(parent_path)
+def remove_readonly(func, path, _):  # 错误回调函数，改变只读属性位，重新删除
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
 
 # 节流Throttling: 限制函数执行频率的技术
 class Throttler:
@@ -61,10 +65,8 @@ class DirectoryEventHandler(FileSystemEventHandler):
         self.throttler.call(item_index)  # 使用节流器对item_index进行排序 防止频繁的排序导致阻塞
         print(Fore.GREEN + f'Add {item}')
     def on_created(self, event):
-        print(f"Create: [{event.src_path}]")
         self.add_item(event.src_path)
     def on_deleted(self, event):
-        print(f"Delete: [{event.src_path}]")
         self.remove_item(event.src_path)
     def on_moved(self, event):
         print(f"Move: [{event.src_path}] -> [{event.dest_path}]")

@@ -63,6 +63,24 @@ body.dark-mode div.container {
 	box-shadow: 0 4px 6px var(--dark-border-color) !important;
 }
 
+body.dark-mode button.delete-btn {
+	background-color: var(--dark-danger-color) !important;
+	color: var(--dark-button-foreground-color) !important;
+}
+
+body.dark-mode a#confirm-delete {
+	background-color: var(--dark-danger-color) !important;
+}
+
+body.dark-mode a#confirm-delete, 
+body.dark-mode a#cancel-delete {
+	color: var(--dark-button-foreground-color) !important;
+}
+
+body.dark-mode div#delete-modal-content {
+    box-shadow: 0 4px 8px var(--barely-transparent-white) !important;
+}
+
 #night-mode-toggle {
 	position: fixed;
 	top: 12px;

@@ -11,13 +11,8 @@
 	<body>
 		{% include "dark_mode.html" %}
 		{% include "search_form.html" %}
-		<ul id="dir-list">
-			{% for folder in results %}
-			<li>
-				<a href="/view_dir?path={{ folder | urlencode }}">{{ folder | basename }}</a>
-			</li>
-			{% endfor %}
-		</ul>
+		{% include "list.html" %}
 
+		<script src="/static/js/delete.js"></script>
 	</body>
 </html>

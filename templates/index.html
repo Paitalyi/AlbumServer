@@ -53,13 +53,7 @@
 			</div>
 		</div>
 
-		<ul id="dir-list">
-			{% for folder in subdir %}
-			<li>
-				<a href="/view_dir?path={{ folder | urlencode }}">{{ folder | basename }}</a>
-			</li>
-			{% endfor %}
-		</ul>
+		{% include "list.html" %}
 
 		{% if total_pages > 1 %}
 		<div class="pagination">
@@ -74,5 +68,6 @@
 		{% endif %}
 
 		<script src="/static/js/index.js"></script>
+		<script src="/static/js/delete.js"></script>
 	</body>
 </html>

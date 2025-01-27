@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from flask import Flask, request, session, render_template, send_file, redirect, url_for, send_from_directory, abort, jsonify
 import time
+import shutil
 import argparse
 from random import choice
 from urllib.parse import quote
@@ -150,7 +151,7 @@ def view_dir():
             file_handler.current_dir = full_path  # 为了实现搜索功能
             print(Fore.YELLOW + f'当前目录为 [{file_handler.current_dir}]，当前页码为 [{page}]')
 
-            return render_template('index.html', title=f"当前目录: {relative_path}", query=search_query, path=relative_path, subdir=subdir_to_display, total_pages=total_pages, page=page)
+            return render_template('index.html', title=f"当前目录: {relative_path}", query=search_query, path=relative_path, items=subdir_to_display, total_pages=total_pages, page=page)
         else:
             image_files = file_handler.get_image_files(full_path)
             user_agent = request.headers.get('User-Agent', '')
@@ -222,6 +223,20 @@ def view_img():
     else:
         return "<h1>404 Image not found.</h1>", 404
 
+@app.route('/remove_dir')
+def remove_dir():
+    relative_path = request.args.get('path', '')
+
+    # 安全检查
+    full_path = safe_path_check(relative_path)
+
+    if os.path.isdir(full_path):
+        shutil.rmtree(full_path, onexc=remove_readonly)
+        print(Fore.YELLOW + f'删除文件夹: [{full_path}]')
+        return redirect(url_for('view_dir', path=''))
+    else:
+        return "<h1>404 Folder Not Found.</h1>", 404
+
 @app.route('/search', methods=['POST'])
 def search():
     query = request.form.get('query', '')
@@ -230,10 +245,10 @@ def search():
         return jsonify({"error": "Search query cannot be empty."}), 400
 
     search_results = file_handler.search_folders(query)
-    return render_template('search.html', title=f"搜索结果: {query}", query=query, results=search_results)
+    return render_template('search.html', title=f"搜索结果: {query}", query=query, items=search_results)
 
 @app.route('/random_subdir')
-def random_subdirectory():
+def random_subdir():
     # 获取当前目录的子目录
     relative_path = request.args.get('path', '')
 

@@ -81,6 +81,10 @@ body.dark-mode div#delete-modal-content {
     box-shadow: 0 4px 8px var(--barely-transparent-white) !important;
 }
 
+body.dark-mode div.pagination a.current {
+	color: var(--dark-button-foreground-color) !important;
+}
+
 #night-mode-toggle {
 	position: fixed;
 	top: 12px;

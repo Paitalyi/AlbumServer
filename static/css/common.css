@@ -123,7 +123,7 @@ li::marker {
 }
 
 #dir-list>* {
-	margin: 5px 100px;
+	margin: 5px 15vh;
 }
 
 
@@ -300,8 +300,8 @@ input[type="password"].login-input:focus {
 
 .sidebar-trigger {
 	position: fixed;
-	top: 20px;
-	right: 20px;
+	top: 12px;
+	right: 12px;
 	z-index: 999;
 	cursor: pointer;
 }
@@ -565,7 +565,7 @@ input[type="password"].login-input:focus {
 	display: flex;
 	list-style: none;
 	padding: 0;
-	margin: 0 auto;
+	margin: 40px auto 0;
 	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
@@ -576,7 +576,7 @@ input[type="password"].login-input:focus {
 	font-size: 15px;
 	font-weight: bold;
 	padding: 5px 10px;
-	margin: 8px;
+	margin: 0;
 	border-radius: 10px;
 	border: none;
 	color: var(--primary-color);

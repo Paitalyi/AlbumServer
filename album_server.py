@@ -130,7 +130,7 @@ def logout():
 def view_dir():
     relative_path = request.args.get('path', '')
     page = int(request.args.get('page', 1))
-    
+
     # 安全检查
     full_path = safe_path_check(relative_path)
 
@@ -148,7 +148,7 @@ def view_dir():
                 relative_path = '/'
 
             file_handler.current_dir = full_path  # 为了实现搜索功能
-            print(Fore.YELLOW + f'当前目录为 [{file_handler.current_dir}]')
+            print(Fore.YELLOW + f'当前目录为 [{file_handler.current_dir}]，当前页码为 [{page}]')
 
             return render_template('index.html', title=f"当前目录: {relative_path}", query=search_query, path=relative_path, subdir=subdir_to_display, total_pages=total_pages, page=page)
         else:
@@ -211,7 +211,7 @@ def view_img():
 
     # 安全检查
     full_path = safe_path_check(relative_path)
-    
+
     if os.path.isfile(full_path) and is_img(full_path):
         img_ext = os.path.splitext(full_path)[1]
         img_ext = img_ext[1:]  # remove .

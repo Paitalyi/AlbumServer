@@ -95,9 +95,10 @@ class GalleryFileHandler():
             sub_dirs = self.cache_folders
             print(Fore.GREEN + f'命中文件夹列表缓存: [{self.cache_folders_dir}]')
         elif os.path.relpath(directory, self.home_dir) == '.':
-            self.cache_folders_dir = self.home_dir
-            print(Fore.YELLOW + f'更改文件夹缓存目录为: [{self.cache_folders_dir}]')
             sub_dirs = self.cache_folders_for_home_dir
+            self.cache_folders_dir = self.home_dir
+            print(Fore.YELLOW + f'更改文件夹缓存目录为: [{self.home_dir}]')
+            self.cache_folders = self.cache_folders_for_home_dir
         else:
             sub_dirs = self._get_folder_index(directory)
             if sub_dirs:  # sub_dirs非空 按照本应用的逻辑 应该进入展示这些子目录的index页 所以缓存目录更改

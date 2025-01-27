@@ -59,6 +59,10 @@ body.dark-mode form#search-form {
 	background-color: var(--dark-background-color) !important;
 }
 
+body.dark-mode div.container {
+	box-shadow: 0 4px 6px var(--dark-border-color) !important;
+}
+
 #night-mode-toggle {
 	position: fixed;
 	top: 12px;

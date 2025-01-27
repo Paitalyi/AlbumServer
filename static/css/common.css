@@ -19,7 +19,7 @@
 	--dark-form-background-color: #0b0b0b;
 
 	--grey-backgroud-color: #f8f8f8;
-	--grey-main-color: #0056b3;
+	--grey-primary-color: #0056b3;
 	--grey-danger-color: #721c24;
 
 	--little-transparent-black: rgba(0, 0, 0, 0.9);
@@ -109,7 +109,7 @@ li::marker {
 }
 
 #search-form button:hover {
-	background-color: var(--grey-main-color);
+	background-color: var(--grey-primary-color);
 }
 
 #search-form>* {
@@ -138,7 +138,8 @@ li::marker {
 }
 
 .settings-input {
-	width: 95%;
+	box-sizing: border-box;
+	width: 100%;
 	padding: 10px;
 	border: 1px solid var(--border-color);
 	border-radius: 4px;
@@ -186,7 +187,7 @@ li::marker {
 }
 
 #saveButton:hover {
-	background: var(--grey-main-color);
+	background: var(--grey-primary-color);
 }
 
 #resetButton {
@@ -207,7 +208,8 @@ li::marker {
 	flex-direction: column;
 	height: 100vh;
 	color: var(--foreground-color);
-	padding: 20px;
+	padding: 0;
+	margin: 0;
 }
 
 #login-h2 {
@@ -257,7 +259,7 @@ input[type="password"].login-input:focus {
 }
 
 #login-button:hover {
-	background-color: var(--grey-main-color);
+	background-color: var(--grey-primary-color);
 }
 
 #login-msg {
@@ -470,13 +472,13 @@ input[type="password"].login-input:focus {
 
 .nav-previous .prev a:hover,
 .nav-next .next a:hover {
-	color: var(--grey-main-color);
+	color: var(--grey-primary-color);
 }
 
 .pagination {
 	display: flex;
 	list-style: none;
-	padding: 2.5rem 0;
+	padding: 0;
 	margin: 0 auto;
 	flex-wrap: wrap;
 	justify-content: center;
@@ -489,20 +491,25 @@ input[type="password"].login-input:focus {
 	font-weight: bold;
 	padding: 5px 10px;
 	margin: 8px;
+	border-radius: 10px;
+	border: none;
 	color: var(--primary-color);
 	text-decoration: none;
-	transition: color 0.3s ease;
+	transition: all 0.3s ease-in;
 }
 
 .pagination a:hover {
-	color: var(--grey-main-color);
+	background-color: var(--primary-color);
+	color: var(--grey-primary-color);
 }
 
 .pagination a.current {
-	border: 2px var(--primary-color) solid;
-	border-radius: 5px;
 	cursor: default;
 	pointer-events: none;
+	background-color: var(--primary-color);
+	color: var(--button-foreground-color);
+	border-radius: 10px;
+	border: none;
 }
 
 .fixed-right {

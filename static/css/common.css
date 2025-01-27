@@ -565,7 +565,7 @@ input[type="password"].login-input:focus {
 	display: flex;
 	list-style: none;
 	padding: 0;
-	margin: 40px auto 0;
+	margin: 40px auto;
 	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;

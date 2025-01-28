@@ -470,7 +470,7 @@ input[type="password"].login-input:focus {
 	width: 100%;
 }
 
-#reading_progress {
+#reading-progress {
 	position: fixed;
 	top: 0;
 	left: 0;

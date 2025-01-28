@@ -44,6 +44,10 @@ body.dark-mode label {
 }
 
 /* 补丁 */
+body.dark-mode div#reading-progress {
+	background-color: var(--dark-primary-color) !important;
+}
+
 body.dark-mode div.fixed-right {
 	background: var(--semi-transparent-black) !important;
 }

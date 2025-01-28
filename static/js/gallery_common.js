@@ -1,25 +1,26 @@
 (function() {
-	function openIndex() {
-		location.href = "/";
-	}
-
-	function updateReadingProgress() {
-		// 获取页面的总高度和当前滚动位置
-		const documentHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-		const scrollPosition = window.scrollY;
-
-		// 计算阅读进度，百分比形式
-		const progress = (scrollPosition / documentHeight) * 100;
-
-		// 更新进度条的宽度
-		document.getElementById('reading_progress').style.width = progress + '%';
-	}
-
 	$(document).ready(function() {
+		const root = document.documentElement;
+		const readingProgress = document.getElementById('reading-progress')
+
+		function openIndex() {
+			location.href = "/";
+		}
+
+		function updateReadingProgress() {
+			// 获取页面的总高度和当前滚动位置
+			const documentHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+			const scrollPosition = window.scrollY;
+
+			// 计算阅读进度，百分比形式
+			const progress = (scrollPosition / documentHeight) * 100;
+
+			// 更新进度条的宽度
+			readingProgress.style.width = progress + '%';
+		}
+
 		// 绑定openIndex到.menu-index
 		$('.menu-index').on('click', openIndex);
-
-		const root = document.documentElement;
 
 		// 如果localStorage没有相应条目 则存储默认值
 		if (localStorage.getItem('brightness') === null) {

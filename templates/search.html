@@ -9,9 +9,12 @@
 		<script src="/static/js/dark_mode.js"></script>
 	</head>
 	<body>
-		{% include "dark_mode.html" %}
-		{% include "search_form.html" %}
-		{% include "list.html" %}
+		<div class="main">
+			{% include "dark_mode.html" %}
+			{% include "search_form.html" %}
+			{% include "list.html" %}
+			{% include "delete-modal.html" %}
+		</div>
 
 		<script src="/static/js/delete.js"></script>
 	</body>

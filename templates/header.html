@@ -1,0 +1,8 @@
+<div class="header">
+    <h3 class="title">{{ title }}
+        <span class="images_num">{{ imgs_num }}P</span>
+        <button class="delete-btn" data-path="{{ path | urlencode }}">删除</button>
+    </h3>
+    {% include "delete-modal.html" %}
+    {% include "nav.html" %}
+</div>

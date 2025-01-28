@@ -10,13 +10,9 @@
 	<body id="gallery-body">
 		<div class="main">
 			{% include "dark_mode.html" %}
+			{% include "dropdown.html" %}
 			<div id="reading_progress"></div>
-			<div class="header">
-				<h3 class="title">{{ title }}
-					<span class="images_num">{{ imgs_num }}P</span>
-				</h3>
-				{% include "nav.html" %}
-			</div>
+			{% include "header.html" %}
 
 			<ul class="gallery">
 				{% for image_path in images %}
@@ -41,5 +37,7 @@
 		<script src="/static/js/lazyload.js"></script>
 		<script src="/static/js/masonry.js"></script>
 		<script src="/static/js/gallery_desktop.js"></script>
+		<script src="/static/js/dropdown.js"></script>
+		<script src="/static/js/delete.js"></script>
 	</body>
 </html>

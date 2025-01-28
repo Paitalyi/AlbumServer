@@ -73,14 +73,14 @@
 		// 准备全屏图片查看器
 		const body = document.body;
 		const images = document.querySelectorAll('.lazy');
-		const fullscreenViewer = document.getElementById('fullscreenViewer');
-		const leftOverlay = document.getElementById("leftOverlay");
-		const rightOverlay = document.getElementById("rightOverlay");
-		const fullscreenImage = document.getElementById('fullscreenImage');
-		const prevButton = document.getElementById('fullscreenPrevButton');
-		const nextButton = document.getElementById('fullscreenNextButton');
-		const progressIndicator = document.getElementById('progressIndicator');
-		const closeButton = document.getElementById('fullscreenCloseButton');
+		const fullscreenViewer = document.getElementById('fullscreen-viewer');
+		const leftOverlay = document.getElementById("left-overlay");
+		const rightOverlay = document.getElementById("right-overlay");
+		const fullscreenImage = document.getElementById('fullscreen-image');
+		const prevButton = document.getElementById('fullscreen-prev-button');
+		const nextButton = document.getElementById('fullscreen-next-button');
+		const progressIndicator = document.getElementById('progress-indicator');
+		const closeButton = document.getElementById('fullscreen-close-button');
 		const totalImages = images.length;
 		let currentIndex = 0;
 		// 更新全屏图片

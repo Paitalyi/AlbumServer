@@ -1,8 +1,8 @@
 <ul id="dir-list">
-    {% for folder in items %}
+    {% for folder_path in items %}
     <li>
-        <a href="/view_dir?path={{ folder | urlencode }}">{{ folder | basename }}</a>
-        <button class="delete-btn" data-path="{{ folder | urlencode }}">删除</button>
+        <a href="/view_dir?path={{ folder_path | urlencode }}">{{ folder_path | basename }}</a>
+        <button class="delete-btn" data-path="{{ folder_path | urlencode }}">删除</button>
     </li>
     {% if loop.index0 % 2 == 0 %}
     <hr class="dotted-hr">
@@ -11,11 +11,3 @@
     {% endif %}
     {% endfor %}
 </ul>
-
-<div id="delete-modal">
-    <div id="delete-modal-content">
-        <p id="delete-msg"></p>
-        <a id="confirm-delete" href="#">是</a>
-        <a id="cancel-delete">否</a>
-    </div>
-</div>

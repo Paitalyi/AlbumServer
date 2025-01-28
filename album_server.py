@@ -137,7 +137,7 @@ def view_dir():
 
     if os.path.isdir(full_path):
         subdir = file_handler.get_subdir(full_path)
-        if subdir:
+        if subdir:  # 展示子文件夹
             search_query = ""
             total_subdir = len(subdir)
             total_pages = (total_subdir + items_per_page - 1) // items_per_page
@@ -152,7 +152,7 @@ def view_dir():
             print(Fore.YELLOW + f'当前目录为 [{file_handler.current_dir}]，当前页码为 [{page}]')
 
             return render_template('index.html', title=f"当前目录: {relative_path}", query=search_query, path=relative_path, items=subdir_to_display, total_pages=total_pages, page=page)
-        else:
+        else:  # 展示图片
             image_files = file_handler.get_image_files(full_path)
             user_agent = request.headers.get('User-Agent', '')
 
@@ -202,7 +202,7 @@ def view_dir():
 
             return render_template(template_file, title=folder_name, imgs_num=len(image_files), images=images_to_display,
                                                   prev_display=prev_display, prev_path=prev_path, prev_name=prev_name, next_display=next_display, next_path=next_path, next_name=next_name,
-                                                  relative_path=relative_path, total_pages=total_pages, page=page)
+                                                  path=relative_path, total_pages=total_pages, page=page)
     else:
         return "<h1>404 Directory not found.</h1>", 404
 
@@ -232,7 +232,6 @@ def remove_dir():
 
     if os.path.isdir(full_path):
         shutil.rmtree(full_path, onexc=remove_readonly)
-        print(Fore.YELLOW + f'删除文件夹: [{full_path}]')
         return redirect(url_for('view_dir', path=''))
     else:
         return "<h1>404 Folder Not Found.</h1>", 404

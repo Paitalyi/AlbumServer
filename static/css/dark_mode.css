@@ -43,6 +43,7 @@ body.dark-mode label {
 	color: var(--dark-foreground-color) !important;
 }
 
+/* 补丁 */
 body.dark-mode div.fixed-right {
 	background: var(--semi-transparent-black) !important;
 }
@@ -51,7 +52,7 @@ body.dark-mode div.nav-drop {
 	box-shadow: -3px 0 10px var(--barely-transparent-white) !important;
 }
 
-body.dark-mode button#resetButton {
+body.dark-mode button#reset-button {
 	background-color: var(--dark-danger-color) !important;
 }
 
@@ -85,6 +86,26 @@ body.dark-mode div.pagination a.current {
 	color: var(--dark-button-foreground-color) !important;
 }
 
+body.dark-mode div.sidebar-trigger {
+	background-color: transparent !important;
+}
+
+body.dark-mode button.fullscreen-nav-button {
+	background-color: var(--dark-background-color) !important;
+}
+
+body.dark-mode div.overlay {
+	background-color: transparent !important;
+}
+
+body.dark-mode div.sidebar-trigger img,
+body.dark-mode div.icon-wrap img,
+body.dark-mode .fix-right-icon
+body.dark-mode #night-mode-icon {
+    filter: brightness(1.2) contrast(1.2) !important;
+}
+
+/* 切换按钮 */
 #night-mode-toggle {
 	position: fixed;
 	top: 12px;

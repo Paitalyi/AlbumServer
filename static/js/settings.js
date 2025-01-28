@@ -1,7 +1,7 @@
 (function() {
 	// 获取控件
-	const saveButton = document.getElementById('saveButton');
-	const resetButton = document.getElementById('resetButton');
+	const saveButton = document.getElementById('save-button');
+	const resetButton = document.getElementById('reset-button');
 
 	const thumbWidthInput = document.getElementById('thumbWidth');
 	const imgRadiusInput = document.getElementById('imgRadius');

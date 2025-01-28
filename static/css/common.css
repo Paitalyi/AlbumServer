@@ -113,6 +113,7 @@ li::marker {
 
 #dir-list {
 	list-style-type: none;
+	width: 100%;
 	padding: 0;
 	text-align: center;
 }
@@ -123,7 +124,7 @@ li::marker {
 }
 
 #dir-list>* {
-	margin: 5px 6vh;
+	margin: 5px 6vw;
 }
 
 
@@ -188,19 +189,19 @@ li::marker {
 	width: 100%;
 }
 
-#saveButton {
+#save-button {
 	background: var(--primary-color);
 }
 
-#saveButton:hover {
+#save-button:hover {
 	background: var(--grey-primary-color);
 }
 
-#resetButton {
+#reset-button {
 	background: var(--danger-color);
 }
 
-#resetButton:hover {
+#reset-button:hover {
 	background: var(--dark-danger-color);
 }
 
@@ -569,7 +570,7 @@ input[type="password"].login-input:focus {
 	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
-	gap: 0;
+	gap: 10px;
 }
 
 .pagination a {
@@ -713,7 +714,7 @@ body.locked {
 	transform: scale(1.05);
 }
 
-.fullscreen-viewer {
+#fullscreen-viewer {
 	display: none;
 	position: fixed;
 	top: 0;
@@ -759,30 +760,30 @@ body.locked {
 	pointer-events: none;
 }
 
-#leftOverlay,
-#rightOverlay {
+#left-overlay,
+#right-overlay {
 	pointer-events: auto;
 	cursor: pointer;
 }
 
-#leftOverlay {
+#left-overlay {
 	left: 0;
 	width: 50%;
 }
 
-#rightOverlay {
+#right-overlay {
 	right: 0;
 	width: 50%;
 }
 
-#fullscreenImage {
+#fullscreen-image {
 	max-width: 100%;
 	max-height: 100%;
 	user-select: none;
 	z-index: 1;
 }
 
-.progress-indicator {
+#progress-indicator {
 	position: absolute;
 	top: 20px;
 	left: 20px;
@@ -790,7 +791,7 @@ body.locked {
 	color: var(--dark-foreground-color);
 }
 
-.fullscreen-close-button {
+#fullscreen-close-button {
 	position: absolute;
 	top: 20px;
 	right: 20px;

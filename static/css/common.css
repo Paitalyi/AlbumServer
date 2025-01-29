@@ -587,7 +587,7 @@ input[type="password"].login-input:focus {
 
 .pagination a:hover {
 	background-color: var(--primary-color);
-	color: var(--grey-primary-color);
+	color: var(--button-foreground-color);
 }
 
 .pagination a.current {

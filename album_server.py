@@ -6,7 +6,7 @@ import argparse
 from random import choice
 from urllib.parse import quote
 from watchdog.observers import Observer
-from watchdog.events import DirCreatedEvent, FileDeletedEvent, DirMovedEvent
+from watchdog.events import DirCreatedEvent, DirMovedEvent, DirDeletedEvent, FileDeletedEvent
 from album_utils import *
 
 start_time = time.time()
@@ -48,8 +48,8 @@ event_handler = DirectoryEventHandler(file_handler, throttler)
 observer = Observer()
 # 开始监控
 observer.schedule(event_handler, home_dir, recursive=False, 
-                  event_filter=[DirCreatedEvent, FileDeletedEvent, DirMovedEvent])
-                  # 应该使用DirDeletedEvent 但watchdog会将所有删除事件都理解为FileDeletedEvent
+                  event_filter=[DirCreatedEvent, DirMovedEvent, DirDeletedEvent, FileDeletedEvent])
+                  # 应该仅使用DirDeletedEvent 但watchdog会将某些文件夹删除事件理解为FileDeletedEvent
 observer.start()
 print(Fore.GREEN + f'Monitoring directory: [{home_dir}].')
 

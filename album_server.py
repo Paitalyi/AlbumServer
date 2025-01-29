@@ -151,7 +151,7 @@ def view_dir():
             file_handler.current_dir = full_path  # 为了实现搜索功能
             print(Fore.YELLOW + f'当前目录为 [{file_handler.current_dir}]，当前页码为 [{page}]')
 
-            return render_template('index.html', title=f"当前目录: {relative_path}", query=search_query, path=relative_path, items=subdir_to_display, total_pages=total_pages, page=page)
+            return render_template('index.html', title=f"当前目录: {relative_path}", query=search_query, path=relative_path, random_path=relative_path, items=subdir_to_display, total_pages=total_pages, page=page)
         else:  # 展示图片
             image_files = file_handler.get_image_files(full_path)
             user_agent = request.headers.get('User-Agent', '')
@@ -202,7 +202,7 @@ def view_dir():
 
             return render_template(template_file, title=folder_name, imgs_num=len(image_files), images=images_to_display,
                                                   prev_display=prev_display, prev_path=prev_path, prev_name=prev_name, next_display=next_display, next_path=next_path, next_name=next_name,
-                                                  path=relative_path, total_pages=total_pages, page=page)
+                                                  path=relative_path, random_path=os.path.dirname(relative_path), total_pages=total_pages, page=page)
     else:
         return "<h1>404 Directory not found.</h1>", 404
 
@@ -231,7 +231,7 @@ def remove_dir():
     full_path = safe_path_check(relative_path)
 
     if os.path.isdir(full_path):
-        shutil.rmtree(full_path, onexc=remove_readonly)
+        shutil.rmtree(full_path, onerror=remove_readonly)
         return redirect(url_for('view_dir', path=''))
     else:
         return "<h1>404 Folder Not Found.</h1>", 404

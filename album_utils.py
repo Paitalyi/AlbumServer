@@ -57,8 +57,8 @@ class DirectoryEventHandler(FileSystemEventHandler):
             item_index = self.file_handler.cache_folders_for_home_dir
             item_index.remove(os.path.relpath(item, self.home_dir))
             print(Fore.YELLOW + f'Remove {item}')
-        except ValueError as e:
-            print(Fore.RED + str(e))
+        except:
+            pass
     def add_item(self, item):
         item_index = self.file_handler.cache_folders_for_home_dir
         item_index.append(os.path.relpath(item, self.home_dir))

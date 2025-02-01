@@ -80,15 +80,10 @@ def safe_path_check(request_path):
         abort(403)  # 如果路径不合法，返回403 Forbidden
     return full_path
 
-# 定义basename过滤器函数
-def basename_filter(value):
-    """提取文件路径中的文件名"""
-    return os.path.basename(value)
-
 # 使用装饰器注册basename过滤器
 @app.template_filter('basename')
 def register_basename_filter(value):
-    return basename_filter(value)
+    return os.path.basename(value)
 
 @app.before_request
 def check_login():

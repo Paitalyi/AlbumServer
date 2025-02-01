@@ -374,12 +374,12 @@ input[type="password"].login-input:focus {
 
 .dotted-hr {
 	border: none;
-	border-top: 2px dotted var(--primary-color);
+	border-top: 2px dotted var(--grey-color);
 }
 
 .normal-hr {
 	border: none;
-	border-top: 2px solid var(--primary-color);
+	border-top: 2px solid var(--grey-color);
 }
 
 #delete-modal {
@@ -779,7 +779,6 @@ body.locked {
 #fullscreen-image {
 	max-width: 100%;
 	max-height: 100%;
-	user-select: none;
 	z-index: 1;
 }
 

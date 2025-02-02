@@ -139,6 +139,10 @@ def view_dir():
             start_index = (page - 1) * items_per_page
             end_index = start_index + items_per_page
             subdir_to_display = subdir[start_index:end_index]
+            # 获取缩略图
+            thumb_img_to_display = []
+            for sub_dir in subdir_to_display:
+                thumb_img_to_display.append(file_handler._get_folder_thumb(sub_dir))
 
             if relative_path == '':
                 relative_path = '/'
@@ -146,7 +150,7 @@ def view_dir():
             file_handler.current_dir = full_path  # 为了实现搜索功能
             print(Fore.YELLOW + f'当前目录为 [{file_handler.current_dir}]，当前页码为 [{page}]')
 
-            return render_template('index.html', title=f"当前目录: {relative_path}", query=search_query, path=relative_path, random_path=relative_path, items=subdir_to_display, total_pages=total_pages, page=page)
+            return render_template('index.html', title=f"当前目录: {relative_path}", query=search_query, path=relative_path, random_path=relative_path, items=list(zip(subdir_to_display, thumb_img_to_display)), total_pages=total_pages, page=page)
         else:  # 展示图片
             image_files = file_handler.get_image_files(full_path)
             user_agent = request.headers.get('User-Agent', '')

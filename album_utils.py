@@ -92,6 +92,15 @@ class GalleryFileHandler():
                     folder_index.append(os.path.relpath(entry.path, self.home_dir))
         folder_index.sort(key=lambda x: list(map(ord, x)))
         return folder_index
+    def _get_folder_thumb(self, sub_dir):
+        for entry in os.scandir(os.path.join(self.home_dir, sub_dir)):
+            if is_img(entry.name):
+                thumb_img_path = os.path.relpath(entry.path, start=self.home_dir)
+                folder_thumb = f'/view_img?path={thumb_img_path}'
+                break
+        else:
+            folder_thumb = '/static/asset/folder.svg'
+        return folder_thumb
     def get_subdir(self, directory):
         if directory.rstrip(os.sep) == self.cache_folders_dir.rstrip(os.sep):
             sub_dirs = self.cache_folders
@@ -123,14 +132,16 @@ class GalleryFileHandler():
             print(Fore.GREEN + f'命中图片列表缓存: {self.cache_images_dir}')
         return image_files
     def search_folders(self, query):
-        results = []
+        folder_results = []
+        thumb_img_results = []
         print(Fore.CYAN + f"Search in [{self.current_dir}].")
         sub_dirs = self.get_subdir(self.current_dir)
         for sub_dir in sub_dirs:
             if query.lower() in sub_dir.lower():  # 大小写不敏感
-                results.append(sub_dir)
-        if len(results) > 1:
+                folder_results.append(sub_dir)
+                thumb_img_results.append(self._get_folder_thumb(sub_dir))
+        if len(folder_results) > 1:
             self.cache_folders_dir = f'(Search): {query}'  # 伪路径 为了重复利用cache_*的机制
             print(Fore.YELLOW + f'更改文件夹缓存目录为: [{self.cache_folders_dir}]')
-            self.cache_folders = results
-        return results
+            self.cache_folders = folder_results
+        return list(zip(folder_results, thumb_img_results))

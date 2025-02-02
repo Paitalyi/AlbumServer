@@ -95,7 +95,7 @@ class GalleryFileHandler():
         return folder_index
     def _get_folder_thumb(self, sub_dir):
         for entry in os.scandir(os.path.join(self.home_dir, sub_dir)):
-            if is_img(entry.name):
+            if entry.is_file() and is_img(entry.name):
                 thumb_img_path = os.path.relpath(entry.path, start=self.home_dir)
                 folder_thumb = f'/view_img?path={quote(thumb_img_path)}'
                 break

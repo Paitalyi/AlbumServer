@@ -4,7 +4,6 @@ import time
 import shutil
 import argparse
 from random import choice
-from urllib.parse import quote
 from watchdog.observers import Observer
 from watchdog.events import DirCreatedEvent, DirMovedEvent, DirDeletedEvent, FileDeletedEvent
 from album_utils import *
@@ -14,7 +13,7 @@ start_time = time.time()
 # 默认值
 PORT = 8888
 HOME_DIR = r"D:\图片"
-ITEMS_PER_PAGE = 100
+ITEMS_PER_PAGE = 36
 IMGS_PER_PAGE = 24
 
 # 获取参数

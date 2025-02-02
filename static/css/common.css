@@ -29,6 +29,8 @@
 	--semi-transparent-blue: rgba(0, 123, 255, 0.5);
 	--semi-transparent-white: rgba(255, 255, 255, 0.5);
 	--barely-transparent-white: rgba(255, 255, 255, 0.1);
+
+	--thumb-width: 300px;
 }
 
 body {
@@ -114,16 +116,16 @@ li::marker {
 #dir-list {
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: center;
 	list-style-type: none;
 	padding: 0;
+	margin: 0 2vw;
+	gap: 20px;
 }
 
 #dir-list li {
 	justify-content: space-between;
-}
-
-#dir-list>* {
-	margin: 5px 6vw;
+	margin: 0;
 }
 
 
@@ -649,9 +651,9 @@ input[type="password"].login-input:focus {
 /* gallery_mobile page */
 .bigimg {
 	position: relative;
+	width: 100%;
 	height: auto;
 	overflow: hidden;
-	width: 100%
 }
 
 .bigimg img {
@@ -801,7 +803,7 @@ body.locked {
 
 /* list 样式 */
 .img-card {
-	width: 300px;
+	width: var(--thumb-width);
 	height: 300px;
 	overflow: hidden;
 	border-radius: 15px;
@@ -812,7 +814,8 @@ body.locked {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	transition: all 2s;
+	border: none;
+	transition: all 1s;
 	object-position: top;
 }
 
@@ -823,9 +826,18 @@ body.locked {
 }
 
 .image-card-title {
+	width: var(--thumb-width);
+	word-wrap: break-word;
 	background-color: var(--background-color);
 	color: var(--foreground-color);
 	font-size: 16px;
+}
+
+.list-a {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
 }
 
 .list-a:hover {

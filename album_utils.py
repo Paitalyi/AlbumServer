@@ -2,6 +2,7 @@ import os
 import re
 import stat
 from threading import Timer
+from urllib.parse import quote
 from colorama import init, Fore
 from watchdog.events import FileSystemEventHandler
 
@@ -96,7 +97,7 @@ class GalleryFileHandler():
         for entry in os.scandir(os.path.join(self.home_dir, sub_dir)):
             if is_img(entry.name):
                 thumb_img_path = os.path.relpath(entry.path, start=self.home_dir)
-                folder_thumb = f'/view_img?path={thumb_img_path}'
+                folder_thumb = f'/view_img?path={quote(thumb_img_path)}'
                 break
         else:
             folder_thumb = '/static/asset/folder.svg'

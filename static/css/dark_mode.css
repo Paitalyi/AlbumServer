@@ -107,7 +107,12 @@ body.dark-mode div.sidebar-trigger img,
 body.dark-mode div.icon-wrap img,
 body.dark-mode .fix-right-icon
 body.dark-mode #night-mode-icon {
-    filter: brightness(1.2) contrast(1.2) !important;
+	filter: brightness(1.2) contrast(1.2) !important;
+}
+
+body.dark-mode .image-card-title {
+	background-color: var(--dark-backgroud-color);
+	color: var(--dark-foreground-color);
 }
 
 /* 切换按钮 */

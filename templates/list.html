@@ -6,8 +6,8 @@
 				<img src="{{ thumb_path }}">
 			</div>
 			<div class="image-card-title">{{ folder_path | basename }}</div>
-			<button class="delete-btn" data-path="{{ folder_path | urlencode }}">删除</button>
 		</a>
+		<button class="delete-btn" data-path="{{ folder_path | urlencode }}">删除</button>
 	</li>
 	{% endfor %}
 </ul>

@@ -684,8 +684,8 @@ body.locked {
 
 .main {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
-	align-items: flex-start;
 	box-sizing: border-box;
 	overflow-x: hidden;
 	flex-wrap: wrap;

@@ -52,8 +52,6 @@
 			effect: "fadeIn", // 图片加载时的效果
 			threshold: lazyThreshold, // 提前加载距离
 			load: function() { // 每当图片加载完成后触发
-				var grid = document.querySelector('.gallery');
-				var msnry = Masonry.data(grid); // 获取已初始化的 Masonry 实例
 				// 使用setTimeout和clearTimeout实现节流debouncing
 				// 清除之前的延时调用
 				clearTimeout(timeout);

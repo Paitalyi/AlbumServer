@@ -94,12 +94,15 @@ class GalleryFileHandler():
         folder_index.sort(key=lambda x: list(map(ord, x)))
         return folder_index
     def _get_folder_thumb(self, sub_dir):
-        for entry in os.scandir(os.path.join(self.home_dir, sub_dir)):
-            if entry.is_file() and is_img(entry.name):
-                thumb_img_path = os.path.relpath(entry.path, start=self.home_dir)
-                folder_thumb = f'/view_img?path={quote(thumb_img_path)}'
-                break
-        else:
+        try:
+            for entry in os.scandir(os.path.join(self.home_dir, sub_dir)):
+                if entry.is_file() and is_img(entry.name):
+                    thumb_img_path = os.path.relpath(entry.path, start=self.home_dir)
+                    folder_thumb = f'/view_img?path={quote(thumb_img_path)}'
+                    break
+            else:
+                folder_thumb = '/static/asset/folder.svg'
+        except FileNotFoundError:
             folder_thumb = '/static/asset/folder.svg'
         return folder_thumb
     def get_subdir(self, directory):

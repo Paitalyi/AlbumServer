@@ -1,43 +1,23 @@
 (function() {
 	$(document).ready(function() {
-		const root = document.documentElement;
-		const readingProgress = document.getElementById('reading-progress')
-
 		function openIndex() {
 			location.href = "/";
 		}
+		// 绑定openIndex到.menu-index
+		$('.menu-index').on('click', openIndex);
 
+		const readingProgress = document.getElementById('reading-progress');
 		function updateReadingProgress() {
 			// 获取页面的总高度和当前滚动位置
 			const documentHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
 			const scrollPosition = window.scrollY;
-
 			// 计算阅读进度，百分比形式
 			const progress = (scrollPosition / documentHeight) * 100;
-
 			// 更新进度条的宽度
 			readingProgress.style.width = progress + '%';
 		}
-
-		// 绑定openIndex到.menu-index
-		$('.menu-index').on('click', openIndex);
-
-		// 如果localStorage没有相应条目 则存储默认值
-		if (localStorage.getItem('brightness') === null) {
-			localStorage.setItem('brightness', defaultBrightness);
-		}
-		if (localStorage.getItem('contrast') === null) {
-			localStorage.setItem('contrast', defaultContrast);
-		}
-		if (localStorage.getItem('saturate') === null) {
-			localStorage.setItem('saturate', defaultSaturate);
-		}
-		if (localStorage.getItem('hueRotate') === null) {
-			localStorage.setItem('hueRotate', defaultHueRotate);
-		}
-		if (localStorage.getItem('sepia') === null) {
-			localStorage.setItem('sepia', defaultSepia);
-		}
+		// 监听滚动事件
+		window.addEventListener('scroll', updateReadingProgress);
 
 		// 获取localStorage存储的值
 		const brightness = localStorage.getItem('brightness');
@@ -45,16 +25,13 @@
 		const saturate = localStorage.getItem('saturate');
 		const hueRotate = localStorage.getItem('hueRotate');
 		const sepia = localStorage.getItem('sepia');
-
 		// 设置CSS变量
+		const root = document.documentElement;
 		root.style.setProperty('--brightness', brightness);
 		root.style.setProperty('--contrast', contrast);
 		root.style.setProperty('--saturate', saturate);
 		root.style.setProperty('--hue-rotate', `${hueRotate}deg`);
 		root.style.setProperty('--sepia', sepia);
-
-		// 监听滚动事件
-		window.addEventListener('scroll', updateReadingProgress);
 
 		// 滚动到顶部
 		$('.menu-top').click(function() {
@@ -62,14 +39,12 @@
 				scrollTop: 0
 			}, 900);
 		});
-
 		// 滚动到底部
 		$('.menu-bottom').click(function() {
 			$('body, html').animate({
 				scrollTop: $(document).height() - $(window).height()
 			}, 900);
 		});
-
 		$(window).scroll(function() {
 			const scrollTop = $(window).scrollTop();
 			const scrollBottom = $(document).height() - $(window).height() - scrollTop;

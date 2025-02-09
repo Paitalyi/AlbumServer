@@ -132,8 +132,6 @@ li::marker {
 }
 
 
-
-
 /* settings page */
 .settings-hr {
 	border: none;
@@ -150,7 +148,7 @@ li::marker {
 	padding-bottom: 5px;
 }
 
-.settings-input {
+.settings-input[type="number"] {
 	box-sizing: border-box;
 	width: 100%;
 	padding: 10px;
@@ -159,7 +157,7 @@ li::marker {
 	font-size: 16px;
 }
 
-.settings-input:focus {
+.settings-input[type="number"]:focus {
 	border-color: var(--primary-color);
 	outline: none;
 	box-shadow: 0 0 5px var(--semi-transparent-blue);

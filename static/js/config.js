@@ -9,3 +9,21 @@ const defaultContrast = 1;         // 图片对比度 0使得图片变灰 1无�
 const defaultSaturate = 1.08;      // 图片饱和度 0完全不饱和 1无影响 大于1则增加饱和度
 const defaultHueRotate = -8;       // 对图片应用色相旋转 单位deg 0无影响
 const defaultSepia = 0.15;         // 将图像转换为深褐色 0无影响 1则完全是深褐色的
+
+function setDefaultIfIsNull(key, value) {
+    if (localStorage.getItem(key) === null) {
+        localStorage.setItem(key, value);
+    }
+}
+
+// 如果localStorage没有相应条目 则存储默认值
+setDefaultIfIsNull('brightness', defaultBrightness);
+setDefaultIfIsNull('contrast', defaultContrast);
+setDefaultIfIsNull('saturate', defaultSaturate);
+setDefaultIfIsNull('hueRotate', defaultHueRotate);
+setDefaultIfIsNull('sepia', defaultSepia);
+setDefaultIfIsNull('thumbWidth', defaultThumbWidth);
+setDefaultIfIsNull('imgRadius', defaultImgRadius)
+setDefaultIfIsNull('refreshTimeout', defaultRefreshTimeout);
+setDefaultIfIsNull('lazyThreshold', defaultLazyThreshold);
+setDefaultIfIsNull('gridGutter', defaultGridGutter);

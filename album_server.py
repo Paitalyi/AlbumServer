@@ -15,20 +15,22 @@ PORT = 8888
 HOME_DIR = r"D:\图片"
 ITEMS_PER_PAGE = 36
 IMGS_PER_PAGE = 24
+PAGINATE = True
 
 # 获取参数
 parser = argparse.ArgumentParser()
-
 parser.add_argument('--port', type=int, default=PORT, help='服务器监听的端口号')
 parser.add_argument('--home', type=str, default=HOME_DIR, help='服务器展示的家目录')
 parser.add_argument('--items', type=int, default=ITEMS_PER_PAGE, help='目录页每页的条目数')
+parser.add_argument('--no-page', dest='page', action='store_false', help='关闭图片页分页功能')
 parser.add_argument('--imgs', type=int, default=IMGS_PER_PAGE, help='图片页每页的图片数')
-
+parser.set_defaults(page=True)
 args = parser.parse_args()
 
 port = args.port
 home_dir = args.home
 items_per_page = args.items
+paginate = args.page
 imgs_per_page = args.imgs
 
 # 文件处理器实例
@@ -157,10 +159,17 @@ def view_dir():
             # 获取当前文件夹的名称 relative_path即images的父目录
             folder_name = os.path.basename(relative_path)
             total_images = len(image_files)
-            total_pages = (total_images + imgs_per_page - 1) // imgs_per_page
-            start_index = (page - 1) * imgs_per_page
-            end_index = start_index + imgs_per_page
-            images_to_display = image_files[start_index:end_index]
+
+            if paginate:
+                total_pages = (total_images + imgs_per_page - 1) // imgs_per_page
+                start_index = (page - 1) * imgs_per_page
+                end_index = start_index + imgs_per_page
+                images_to_display = image_files[start_index:end_index]
+            else:
+                total_pages = 1
+                page = 1
+                images_to_display = image_files
+
             is_mobile_flag = is_mobile(user_agent)
 
             # 确保 relative_path 即image的父目录相对home_dir的相对路径在 cache_folders 中
@@ -198,7 +207,7 @@ def view_dir():
             # 根据设备类型选择模板文件
             template_file = "gallery_mobile.html" if is_mobile_flag else "gallery_desktop.html"
 
-            return render_template(template_file, title=folder_name, imgs_num=len(image_files), images=images_to_display,
+            return render_template(template_file, title=folder_name, imgs_num=total_images, images=images_to_display,
                                                   prev_display=prev_display, prev_path=prev_path, prev_name=prev_name, next_display=next_display, next_path=next_path, next_name=next_name,
                                                   path=relative_path, random_path=os.path.dirname(relative_path), total_pages=total_pages, page=page)
     else:

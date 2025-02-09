@@ -1,10 +1,5 @@
 (function() {
 	$(document).ready(function() {
-		// 如果localStorage没有相应条目 则存储默认值
-		if (localStorage.getItem('lazyThreshold') === null) {
-			localStorage.setItem('lazyThreshold', defaultLazyThreshold);
-		}
-
 		// 获取localStorage存储的值
 		const savedLazyThreshold = localStorage.getItem('lazyThreshold');
 

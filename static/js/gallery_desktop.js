@@ -1,17 +1,5 @@
 (function() {
 	$(document).ready(function() {
-		// 如果localStorage没有相应条目 则存储默认值
-		function storeDefault(key, defaultValue) {
-			if (localStorage.getItem(key) === null) {
-				localStorage.setItem(key, defaultValue);
-			}
-		}
-		storeDefault('thumbWidth', defaultThumbWidth);
-		storeDefault('imgRadius', defaultImgRadius)
-		storeDefault('refreshTimeout', defaultRefreshTimeout);
-		storeDefault('lazyThreshold', defaultLazyThreshold);
-		storeDefault('gridGutter', defaultGridGutter);
-
 		// 获取localStorage存储的值
 		const savedThumbWidth = localStorage.getItem('thumbWidth');
 		const savedImgRadius = localStorage.getItem('imgRadius');

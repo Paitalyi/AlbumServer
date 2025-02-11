@@ -9,10 +9,10 @@
 	</head>
 	<body id="gallery-body">
 		<div class="main">
-			{% include "dark_mode.html" %}
-			{% include "dropdown.html" %}
+			{% include "_dark_mode.html" %}
+			{% include "_dropdown.html" %}
 			<div id="reading-progress"></div>
-			{% include "header.html" %}
+			{% include "_header.html" %}
 
 			<ul class="gallery">
 				{% for image_path in images %}
@@ -23,8 +23,8 @@
 				{% endfor %}
 			</ul>
 
-			{% include "fullscreen_viewer.html" %}
-			{% include "footer.html" %}
+			{% include "_fullscreen_viewer.html" %}
+			{% include "_footer.html" %}
 		</div>
 		<script src="/static/js/jquery.js"></script>
 		<script src="/static/js/gallery_common.js"></script>

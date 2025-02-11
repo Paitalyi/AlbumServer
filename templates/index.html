@@ -10,14 +10,14 @@
 	</head>
 	<body>
 		<div class="main">
-			{% include "dark_mode.html" %}
-			{% include "dropdown.html" %}
+			{% include "_dark_mode.html" %}
+			{% include "_dropdown.html" %}
 			<div class="header">
-				{% include "search_form.html" %}
+				{% include "_search_form.html" %}
 			</div>
 
-			{% include "list.html" %}
-			{% include "delete-modal.html" %}
+			{% include "_list.html" %}
+			{% include "_delete_modal.html" %}
 
 			{% if total_pages > 1 %}
 			<div class="pagination">

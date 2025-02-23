@@ -19,5 +19,5 @@ $ chmod +x album_server.py
 $ ./album_server.py -h
 
 # Example usage
-./album_server.py -p 8899 -d ALBUM_HOME_DIR
+$ ./album_server.py -p 8899 -d ALBUM_HOME_DIR
 ```

@@ -16,8 +16,8 @@ PAGINATE = True
 
 # 获取参数
 parser = argparse.ArgumentParser(description='Album Server')
-parser.add_argument('-p', '--port', type=int, default=PORT, help='Port monitored by the album server')
-parser.add_argument('-d', '--dir', type=str, default=HOME_DIR, help='Home dir displayed on the album server')
+parser.add_argument('-p', '--port', type=int, dest='port', default=PORT, help='Port monitored by the album server')
+parser.add_argument('-d', '--dir', type=str, dest='home', default=HOME_DIR, help='Home dir displayed on the album server')
 parser.add_argument('--items', type=int, default=ITEMS_PER_PAGE, help='Number of entries per contents-page')
 parser.add_argument('-n', '--no-page', dest='page', action='store_false', help='Turn off pagination func of gallery page')
 parser.add_argument('--imgs', type=int, default=IMGS_PER_PAGE, help='Number of images per gallery page')

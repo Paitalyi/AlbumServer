@@ -4,9 +4,6 @@ import time
 import shutil
 import argparse
 from random import choice
-from watchdog.observers import Observer
-from watchdog.events import DirCreatedEvent, DirMovedEvent, DirDeletedEvent, FileDeletedEvent
-from album_utils import *
 
 start_time = time.time()
 
@@ -18,12 +15,12 @@ IMGS_PER_PAGE = 24
 PAGINATE = True
 
 # 获取参数
-parser = argparse.ArgumentParser()
-parser.add_argument('--port', type=int, default=PORT, help='服务器监听的端口号')
-parser.add_argument('--home', type=str, default=HOME_DIR, help='服务器展示的家目录')
-parser.add_argument('--items', type=int, default=ITEMS_PER_PAGE, help='目录页每页的条目数')
-parser.add_argument('--no-page', dest='page', action='store_false', help='关闭图片页分页功能')
-parser.add_argument('--imgs', type=int, default=IMGS_PER_PAGE, help='图片页每页的图片数')
+parser = argparse.ArgumentParser(description='Album Server')
+parser.add_argument('-p', '--port', type=int, default=PORT, help='Port monitored by the album server')
+parser.add_argument('-d', '--dir', type=str, default=HOME_DIR, help='Home dir displayed on the album server')
+parser.add_argument('--items', type=int, default=ITEMS_PER_PAGE, help='Number of entries per contents-page')
+parser.add_argument('-n', '--no-page', dest='page', action='store_false', help='Turn off pagination func of gallery page')
+parser.add_argument('--imgs', type=int, default=IMGS_PER_PAGE, help='Number of images per gallery page')
 parser.set_defaults(page=True)
 args = parser.parse_args()
 
@@ -33,6 +30,7 @@ items_per_page = args.items
 paginate = args.page
 imgs_per_page = args.imgs
 
+from album_utils import *
 # 文件处理器实例
 file_handler = GalleryFileHandler(home_dir)
 print(Fore.GREEN + f'Show galleries in [{home_dir}].')
@@ -43,6 +41,8 @@ def sort_index(item_index):
     print(Fore.GREEN + "Index sorted.")
 throttler = Throttler(interval=2, func=sort_index)  # 节流器 延时2s
 
+from watchdog.observers import Observer
+from watchdog.events import DirCreatedEvent, DirMovedEvent, DirDeletedEvent, FileDeletedEvent
 # 事件处理器实例
 event_handler = DirectoryEventHandler(file_handler, throttler)
 # 观察者实例

@@ -4,6 +4,7 @@ import time
 import shutil
 import argparse
 from random import choice
+from album_utils import *
 
 start_time = time.time()
 
@@ -30,7 +31,6 @@ items_per_page = args.items
 paginate = args.page
 imgs_per_page = args.imgs
 
-from album_utils import *
 # 文件处理器实例
 file_handler = GalleryFileHandler(home_dir)
 print(Fore.GREEN + f'Show galleries in [{home_dir}].')

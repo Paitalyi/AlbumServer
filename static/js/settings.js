@@ -14,6 +14,7 @@
 		const saturateInput = document.getElementById('saturate');
 		const hueRotateInput = document.getElementById('hueRotate');
 		const sepiaInput = document.getElementById('sepia');
+		const slideshowIntervalTimeInput = document.getElementById('slideshowIntervalTime');
 
 		// 先获取一次localStorage中存储的值 初始化saved*变量
 		let savedThumbWidth = localStorage.getItem('thumbWidth');
@@ -26,6 +27,7 @@
 		let savedSaturate = localStorage.getItem('saturate');
 		let savedHueRotate = localStorage.getItem('hueRotate');
 		let savedSepia = localStorage.getItem('sepia');
+		let savedSlideshowIntervalTime = localStorage.getItem('slideshowIntervalTime');
 
 		// 在保存改动的设置后 需要重新获取saved*变量
 		// 方便下一次保存更改时判断是否变更
@@ -40,6 +42,7 @@
 			savedSaturate = localStorage.getItem('saturate');
 			savedHueRotate = localStorage.getItem('hueRotate');
 			savedSepia = localStorage.getItem('sepia');
+			savedSlideshowIntervalTime = localStorage.getItem('slideshowIntervalTime');
 		}
 
 		// 初始化页面: 除了第一次运行外 需要先运行getSavedItems()
@@ -74,6 +77,9 @@
 			if (savedSepia) {
 				sepiaInput.value = savedSepia;
 			}
+			if (savedSlideshowIntervalTime) {
+				slideshowIntervalTimeInput.value = savedSlideshowIntervalTime;
+			}
 		}
 
 		initPage();
@@ -89,6 +95,7 @@
 			const saturate = saturateInput.value;
 			const hueRotate = hueRotateInput.value;
 			const sepia = sepiaInput.value;
+			const slideshowIntervalTime = slideshowIntervalTimeInput.value;
 
 			const defaultSuccessMsg = '下列设置已经保存:\n';
 			const defaultFailMsg = '';
@@ -155,6 +162,12 @@
 			} else if (sepia !== savedSepia) {
 				failMsg += '请输入有效的CSS滤镜深褐色值!(0<=sepia<=1)\n';
 			}
+			if (slideshowIntervalTime && slideshowIntervalTime !== savedSlideshowIntervalTime && slideshowIntervalTime > 0) {
+				localStorage.setItem('slideshowIntervalTime', slideshowIntervalTime);
+				successMsg += '- 幻灯片切换间隔\n';
+			} else if (sepia !== savedSepia) {
+				failMsg += '请输入有效的幻灯片切换间隔!(ms>0)\n';
+			}
 			if (failMsg !== defaultFailMsg) {
 				alert(failMsg);
 			}
@@ -175,6 +188,7 @@
 			localStorage.setItem('saturate', defaultSaturate);
 			localStorage.setItem('hueRotate', defaultHueRotate);
 			localStorage.setItem('sepia', defaultSepia);
+			localStorage.setItem('slideshowIntervalTime', defaultSlideshowIntervalTime);
 			alert('成功重置所有设置项!');
 			getSavedItems();
 			initPage();

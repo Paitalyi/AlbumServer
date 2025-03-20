@@ -794,10 +794,30 @@ body.locked {
 	color: var(--dark-foreground-color);
 }
 
+#slideshow-progress-indicator {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 0%;
+	height: 6px;
+	background-color: var(--primary-color);
+	z-index: 99999;
+	transition: width 0.1s ease-out;
+}
+
 #fullscreen-close-button {
 	position: absolute;
 	top: 20px;
 	right: 20px;
+	font-size: 30px;
+	color: white;
+	cursor: pointer;
+}
+
+#fullscreen-slideshow-button {
+	position: absolute;
+	top: 20px;
+	right: 60px;
 	font-size: 30px;
 	color: white;
 	cursor: pointer;
